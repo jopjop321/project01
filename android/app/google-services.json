@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "733809421866",
+    "project_id": "jstock-19447",
+    "storage_bucket": "jstock-19447.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:733809421866:android:19271510242c37c9fe9d53",
+        "android_client_info": {
+          "package_name": "com.jstock.jstock"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "733809421866-qca5k5uo7k4vr411frq5nm6rao4gr364.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkyE0JXn4xOEdSc39JUPwBVRT62Zd4bmk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "733809421866-qca5k5uo7k4vr411frq5nm6rao4gr364.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
