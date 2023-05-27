@@ -3,26 +3,26 @@ import 'package:form_field_validator/form_field_validator.dart';
 
 class FormProduct extends StatelessWidget {
   final String text;
-  final Function(String?)? onSaved ;
-  final double height;
+  final TextEditingController controller;
+  final int maxLines;
 
   const FormProduct({
-    this.height = 50,
+    this.maxLines = 1,
     required this.text,
-    required this.onSaved,
+    required this.controller,
+    super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-      Profile profile = Profile();
-    return Container(
+    return SizedBox(
       child: Column(
         children: [
           Row(
             children: [
               Text(
                 text,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.normal,
                   color: Colorconstants.graytext75,
@@ -30,21 +30,23 @@ class FormProduct extends StatelessWidget {
               ),
             ],
           ),
-          Container(
-            height: height,
-            child: TextFormField(
-              validator: MultiValidator(
-                  [RequiredValidator(errorText: "ใส่${text}ด้วย")]),
-              // keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                labelText: '',
-                hintText: text,
-                border: OutlineInputBorder(),
-              ),
-              onSaved: onSaved,
+          const SizedBox(height: 8),
+          TextFormField(
+            maxLines: maxLines,
+            validator: MultiValidator(
+              [RequiredValidator(errorText: "ใส่ ${text} ด้วย")],
             ),
+            // keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+              isDense: true,
+              labelText: '',
+              hintText: text,
+              border: const OutlineInputBorder(),
+            ),
+            // onSaved: onSaved,
+            controller: controller,
           ),
-          SizedBox(height: 10,)
+          const SizedBox(height: 10),
         ],
       ),
     );

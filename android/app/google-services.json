@@ -29,6 +29,13 @@
             {
               "client_id": "733809421866-qca5k5uo7k4vr411frq5nm6rao4gr364.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "733809421866-o6vh78ci5flscb6n3mqdnsdvv1ad0ro0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jstock.jstock"
+              }
             }
           ]
         }
