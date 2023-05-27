@@ -7,17 +7,23 @@ class TextTable extends StatelessWidget {
   final String? text3;
   final Color color;
 
-  const TextTable({this.text1, this.text2, this.text3,this.color = Colorconstants.white});
+  const TextTable({
+    this.text1,
+    this.text2,
+    this.text3,
+    this.color = Colorconstants.white,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(children: [
-      Text("    ${text1}", style: TextStyle(color: color)),
-      Spacer(),
-      Spacer(),
-      Text("${text2}", style: TextStyle(color: color)),
-      Spacer(),
-      Text("${text3}    ", style: TextStyle(color: color))
+      Text("$text1", style: TextStyle(color: color)),
+      const Spacer(),
+      const Spacer(),
+      Text("$text2", style: TextStyle(color: color)),
+      const Spacer(),
+      Text("$text3", style: TextStyle(color: color))
     ]);
     ;
   }

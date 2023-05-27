@@ -80,10 +80,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
-            Text(
+            const Text(
               'Latest History',
               style: TextStyle(
                 fontSize: 20,
@@ -91,45 +91,66 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 color: Colorconstants.texttitledashboard,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
-            Stack(
+            Column(
               children: [
                 Container(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                   height: 50,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Colorconstants.blue195DD1,
                     borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20)),
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 1.0,
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
                     ),
+                    // border: Border.all(
+                    //   color: Colors.black,
+                    //   width: 1.0,
+                    // ),
                   ),
-                  child:
-                      TextTable(text1: "Name", text2: "Unit", text3: "Amount"),
+                  child: const TextTable(
+                    text1: "Name",
+                    text2: "Unit",
+                    text3: "Amount",
+                  ),
                 ),
                 Container(
+                  padding: const EdgeInsets.all(20),
                   height: 300,
-                  alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20),
+                    ),
                     border: Border.all(
                       color: Colors.black,
                       width: 1.0,
                     ),
                   ),
-                  child: TextTable(
-                      text1: "Name",
-                      text2: "Unit",
-                      text3: "Amount",
-                      color: Colorconstants.black),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        for (int i = 0; i < 100; i++)
+                          Container(
+                            height: 30,
+                            alignment: Alignment.center,
+                            child: TextTable(
+                              text1: "Name $i",
+                              text2: "Unit $i",
+                              text3: "Amount $i",
+                              color: Colorconstants.black,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
           ],
