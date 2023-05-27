@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jstock/constants/firebase.dart';
 import 'package:jstock/constants/imports.dart';
 
 class AddProductDialog extends StatefulWidget {
@@ -47,7 +48,8 @@ class _AddProductDialogState extends State<AddProductDialog> {
           final storageRef = FirebaseStorage.instance.ref();
 
           final uploadFile = await storageRef
-              .child('products/${_codeController.text}')
+              .child(
+                  '${FirebaseConfig.storageImagePath}/${_codeController.text}')
               .putFile(_imageFile!);
 
           final downloadUrl = await uploadFile.ref.getDownloadURL();
@@ -68,7 +70,12 @@ class _AddProductDialogState extends State<AddProductDialog> {
           backgroundColor: Colors.green[400],
         ));
 
-        Navigator.pop(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ProductScreen(),
+          ),
+        );
       } on Error catch (e) {
         print(e);
       }

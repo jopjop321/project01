@@ -78,7 +78,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
 
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: const Text(
-            'Update Product Successfully',
+            'Updated Product Successfully',
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -88,7 +88,13 @@ class _EditProductDialogState extends State<EditProductDialog> {
           backgroundColor: Colors.green[400],
         ));
 
-        Navigator.pop(context);
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ProductScreen(),
+          ),
+        );
       } on Error catch (e) {
         print(e);
       }

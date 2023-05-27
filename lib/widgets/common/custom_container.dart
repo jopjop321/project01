@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:jstock/constants/colors.dart';
+import 'package:intl/intl.dart';
 
 class CustomContainer extends StatelessWidget {
   final Color color;
   final String title;
   final String titleunit;
   final double unit;
+  final bool intUnit;
 
-  const CustomContainer(
-      {required this.color, required this.title, required this.titleunit, required this.unit});
+  const CustomContainer({
+    super.key,
+    required this.color,
+    required this.title,
+    required this.titleunit,
+    required this.unit,
+    this.intUnit = false,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,45 +28,39 @@ class CustomContainer extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: Padding(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colorconstants.white,
-                    ),
-                  )
-                ],
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colorconstants.white,
+                ),
               ),
-              Row(
-                children: [
-                  Text(
-                    "(${titleunit})",
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colorconstants.white,
-                    ),
-                  )
-                ],
+              const SizedBox(height: 5),
+              Text(
+                "($titleunit)",
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colorconstants.white,
+                ),
               ),
-              Spacer(),
+              const Spacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    "${unit}",
-                    style: TextStyle(
+                    "${unit == 0 ? 0 : !intUnit ? NumberFormat('#,###.0#').format(unit) : unit.toInt()}",
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colorconstants.white,
                     ),
-                  )
+                  ),
                 ],
               ),
             ],

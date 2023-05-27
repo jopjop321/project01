@@ -1,11 +1,19 @@
 class Parser {
   static int toInt(String value) {
     if (value == '') return 0;
-    return int.parse(value);
+    try {
+      return int.parse(value);
+    } on Error catch (_) {
+      return 0;
+    }
   }
 
   static double toDouble(String value) {
     if (value == '') return 0;
-    return double.parse(value);
+    try {
+      return double.parse(value);
+    } on Error catch (_) {
+      return 0;
+    }
   }
 }

@@ -1,5 +1,10 @@
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:jstock/constants/firebase.dart';
 import 'package:jstock/constants/imports.dart';
+import 'package:jstock/widgets/dialogs/confirm.dart';
 import 'package:jstock/widgets/dialogs/editProduct.dart';
+import 'package:jstock/widgets/dialogs/manageProductStock.dart';
+import 'package:jstock/widgets/dialogs/sellProduct.dart';
 
 class ViewProductDialog extends StatefulWidget {
   Map<String, dynamic> data;
@@ -13,13 +18,70 @@ class ViewProductDialog extends StatefulWidget {
 class _ViewProductDialogState extends State<ViewProductDialog> {
   List<String> options = ['Sell', 'Add', 'Edit', 'Delete'];
 
+  Future<void> _deleteProduct() async {
+    try {
+      final db = FirebaseFirestore.instance;
+      await db.collection('products').doc(widget.data['code']).delete();
+
+      if (widget.data['image'] != null) {
+        final storage = FirebaseStorage.instance.ref();
+        final image = storage
+            .child('${FirebaseConfig.storageImagePath}/${widget.data['code']}');
+        await image.delete();
+      }
+    } on Error catch (e) {
+      print(e);
+    }
+  }
+
   void _onAction(String? action) {
+    BuildContext widgetContext = context;
+
     switch (action) {
       case 'Edit':
         showDialog(
           context: context,
           builder: (context) {
             return EditProductDialog(data: widget.data);
+          },
+        );
+        break;
+      case 'Delete':
+        showDialog(
+          context: context,
+          builder: (context) {
+            return ConfirmDialog(
+              title: 'Confirm Delete Product',
+              description:
+                  'Are you sure you want to delete product "${widget.data['code']}"?',
+              onConfirm: () async {
+                await _deleteProduct();
+
+                // ignore: use_build_context_synchronously
+                Navigator.pushReplacement(
+                  widgetContext,
+                  MaterialPageRoute(
+                    builder: (context) => const ProductScreen(),
+                  ),
+                );
+              },
+            );
+          },
+        );
+        break;
+      case 'Sell':
+        showDialog(
+          context: context,
+          builder: (context) {
+            return SellProductDialog(data: widget.data);
+          },
+        );
+        break;
+      case 'Add':
+        showDialog(
+          context: context,
+          builder: (context) {
+            return ManageProductStockDialog(data: widget.data);
           },
         );
         break;
