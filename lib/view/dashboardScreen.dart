@@ -110,7 +110,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       child: CircularProgressIndicator(),
                     );
                   }
-
                   return GridView(
                     padding: EdgeInsets.zero,
                     gridDelegate:
@@ -173,7 +172,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       child: CircularProgressIndicator(),
                     );
                   }
-
                   return Column(
                     children: [
                       Container(
