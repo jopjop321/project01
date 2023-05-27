@@ -6,15 +6,18 @@ import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jstock/constants/imports.dart';
+import 'package:jstock/utils/parser.dart';
 
-class AddProductDialog extends StatefulWidget {
-  const AddProductDialog({super.key});
+class EditProductDialog extends StatefulWidget {
+  final Map<String, dynamic> data;
+
+  EditProductDialog({super.key, required this.data});
 
   @override
-  State<AddProductDialog> createState() => _AddProductDialogState();
+  State<EditProductDialog> createState() => _EditProductDialogState();
 }
 
-class _AddProductDialogState extends State<AddProductDialog> {
+class _EditProductDialogState extends State<EditProductDialog> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _codeController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
@@ -28,6 +31,22 @@ class _AddProductDialogState extends State<AddProductDialog> {
 
   final _formKey = GlobalKey<FormState>();
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _nameController.text = widget.data['name'];
+      _codeController.text = widget.data['code'];
+      _descController.text = widget.data['desc'];
+      _costPriceController.text = (widget.data['cost_price'] ?? 0).toString();
+      _normalPriceController.text =
+          (widget.data['normal_price'] ?? 0).toString();
+      _memberPriceController.text =
+          (widget.data['member_price'] ?? 0).toString();
+      _amountController.text = (widget.data['amount'] ?? 0).toString();
+    });
+  }
+
   Future<void> _saveProduct() async {
     if (_formKey.currentState!.validate()) {
       try {
@@ -37,10 +56,11 @@ class _AddProductDialogState extends State<AddProductDialog> {
           'name': _nameController.text,
           'code': _codeController.text,
           'desc': _descController.text,
-          'cost_price': double.parse(_costPriceController.text),
-          'normal_price': double.parse(_normalPriceController.text),
-          'member_price': double.parse(_memberPriceController.text),
-          'amount': int.parse(_amountController.text),
+          'cost_price': Parser.toDouble(_costPriceController.text),
+          'normal_price': Parser.toDouble(_normalPriceController.text),
+          'member_price': Parser.toDouble(_memberPriceController.text),
+          'amount': Parser.toInt(_amountController.text),
+          'image': widget.data['image'],
         };
 
         if (_imageFile != null) {
@@ -58,7 +78,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
 
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: const Text(
-            'Created Product Successfully',
+            'Update Product Successfully',
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -112,7 +132,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 Row(
                   children: [
                     const Text(
-                      'Add Product',
+                      'Edit Product',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -161,6 +181,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                       ),
                       FormProduct(
                         text: "Product Code",
+                        disabled: true,
                         controller: _codeController,
                       ),
                       FormProduct(

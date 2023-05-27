@@ -45,13 +45,30 @@ class _ProductScreenState extends State<ProductScreen> {
     });
   }
 
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+      _listProducts() async {
+    final db = FirebaseFirestore.instance;
+    final snapshot = await db.collection('products').get();
+    return snapshot.docs;
+  }
+
+  List<Widget> _buildProducts(
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> data) {
+    List<Widget> list = [];
+
+    for (var product in data) {
+      list.add(
+        CardContainer(
+          data: product.data(),
+        ),
+      );
+    }
+
+    return list;
+  }
+
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
-    final totalProvider = Provider.of<TotlaProvider>(context);
-
     return Scaffold(
       appBar: AppBarWidget(),
       body: SafeArea(
@@ -102,39 +119,32 @@ class _ProductScreenState extends State<ProductScreen> {
             const SizedBox(
               height: 20,
             ),
-            GridView(
-              padding: EdgeInsets.zero,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                childAspectRatio: 153 / 230,
-              ),
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              children: const [
-                CardContainer(
-                  title: "Speaker",
-                  description:
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent ",
-                  remaining: 10,
-                  price: 25000,
-                  pricecost: 12000,
-                  pricemember: 21000,
-                ),
-                CardContainer(
-                  title: "Monthly",
-                  remaining: 10,
-                ),
-                CardContainer(
-                  title: "Total profit",
-                  remaining: 10,
-                ),
-                CardContainer(
-                  title: "TotalSelling",
-                  remaining: 10,
-                ),
-              ],
+            FutureBuilder<List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
+              future: _listProducts(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return GridView(
+                    padding: EdgeInsets.zero,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: 153 / 230,
+                    ),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    children: [
+                      ..._buildProducts(snapshot.data!),
+                    ],
+                  );
+                }
+
+                return Container(
+                  alignment: Alignment.center,
+                  child: const CircularProgressIndicator(),
+                );
+              },
             ),
             const SizedBox(
               height: 20,

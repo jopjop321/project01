@@ -1,39 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:jstock/widgets/common/customAlertDialog.dart';
 import 'package:jstock/constants/colors.dart';
+import 'package:jstock/widgets/dialogs/viewProduct.dart';
 
 class CardContainer extends StatelessWidget {
-  final String title;
-  final int remaining;
-  final double? price;
-  final double? pricemember;
-  final double? pricecost;
-  final String? description;
+  // final String title;
+  // final int remaining;
+  // final double? price;
+  // final double? pricemember;
+  // final double? pricecost;
+  // final String? description;
+  final Map<String, dynamic> data;
 
   const CardContainer({
-    required this.title,
-    required this.remaining,
-    this.description,
-    this.price = 0,
-    this.pricemember =0,
-    this.pricecost = 0,
+    required this.data,
   });
   @override
   Widget build(BuildContext context) {
-
     return InkWell(
       onTap: () {
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return CustomAlertDialog(
-              title: title,
-              code: "SK14785743",
-              price: price,
-              pricecost: pricecost,
-              pricemember: pricemember,
-              remaining: remaining,
-              description: description,
+            return ViewProductDialog(
+              data: data,
             );
           },
         );
@@ -59,11 +49,17 @@ class CardContainer extends StatelessWidget {
               Container(
                 width: 110, // กำหนดความกว้างของ Container
                 height: 110, // กำหนดความสูงของ Container
-                child: Image.asset(
-                  'assets/images/logoblue.png', // ตำแหน่งไฟล์รูปภาพ
-                  fit: BoxFit
-                      .cover, // การปรับขนาดรูปภาพให้พอดีกับขนาดของ Container
-                ),
+                child: data['image'] != null
+                    ? Image.network(
+                        data['image'], // ตำแหน่งไฟล์รูปภาพ
+                        fit: BoxFit
+                            .cover, // การปรับขนาดรูปภาพให้พอดีกับขนาดของ Container
+                      )
+                    : Image.asset(
+                        'assets/images/logoblue.png', // ตำแหน่งไฟล์รูปภาพ
+                        fit: BoxFit
+                            .cover, // การปรับขนาดรูปภาพให้พอดีกับขนาดของ Container
+                      ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -71,7 +67,7 @@ class CardContainer extends StatelessWidget {
                   Expanded(
                     flex: 5,
                     child: Text(
-                      title,
+                      data['name'],
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: TextStyle(
@@ -109,7 +105,7 @@ class CardContainer extends StatelessWidget {
                       ),
                       Spacer(),
                       Text(
-                        "${remaining}",
+                        "${data['amount'] ?? 0}",
                         style: TextStyle(
                           color: Colorconstants.white,
                           fontSize: 10,
@@ -123,10 +119,18 @@ class CardContainer extends StatelessWidget {
                 height: 5,
               ),
               Row(
-                children: [Text("Price"), Spacer(), Text("${price}฿")],
+                children: [
+                  Text("Price"),
+                  Spacer(),
+                  Text("${data['normal_price'] ?? 0}฿")
+                ],
               ),
               Row(
-                children: [Text("Member"), Spacer(), Text("${pricemember}฿")],
+                children: [
+                  Text("Member"),
+                  Spacer(),
+                  Text("${data['member_price'] ?? 0}฿")
+                ],
               ),
             ],
           ),
