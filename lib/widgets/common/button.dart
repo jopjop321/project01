@@ -42,8 +42,8 @@ class MyButton extends StatelessWidget {
               offset: Offset(0, 3),
               color: shadowColor,
               blurRadius: 20,
-            )
-      ]),
+            ),
+      ],),
       child: TextButton(
         onPressed: (!disabled ? onPressed : null) as void Function()?,
         child: Align(

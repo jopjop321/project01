@@ -350,7 +350,7 @@ class _SellProductDialogState extends State<SellProductDialog> {
             SizedBox(
               width: double.infinity,
               child: Text(
-                '${_isMember ? widget.data['member_price'] : widget.data['normal_price']}฿',
+                '${_isMember ? widget.data['member_price']*_currentAmount : widget.data['normal_price']*_currentAmount}฿',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 20,

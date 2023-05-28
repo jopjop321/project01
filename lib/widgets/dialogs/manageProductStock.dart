@@ -14,27 +14,28 @@ class ManageProductStockDialog extends StatefulWidget {
 class _ManageProductStockDialogState extends State<ManageProductStockDialog> {
   TextEditingController _stockController = TextEditingController();
   int _currentStock = 0;
+  int _addcurrentStock = 0 ;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _stockController.text = (widget.data['amount'] ?? 0).toString();
+      _stockController.text = (0).toString();
       _currentStock = widget.data['amount'] ?? 0;
     });
   }
 
   void _increaseStock() {
     FocusScope.of(context).unfocus();
-    _currentStock++;
-    _stockController.text = _currentStock.toString();
+    _addcurrentStock++;
+    _stockController.text = _addcurrentStock.toString();
   }
 
   void _decreaseStock() {
     FocusScope.of(context).unfocus();
-    if (_currentStock > 0) {
-      _currentStock--;
-      _stockController.text = _currentStock.toString();
+    if (_addcurrentStock > 0) {
+      _addcurrentStock--;
+      _stockController.text = _addcurrentStock.toString();
     }
   }
 
@@ -42,7 +43,7 @@ class _ManageProductStockDialogState extends State<ManageProductStockDialog> {
     try {
       final db = FirebaseFirestore.instance;
       await db.collection('products').doc(widget.data['code']).update({
-        'amount': _currentStock,
+        'amount': _currentStock+_addcurrentStock,
       });
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -219,7 +220,7 @@ class _ManageProductStockDialogState extends State<ManageProductStockDialog> {
                           textAlign: TextAlign.center,
                           controller: _stockController,
                           onChanged: (String value) {
-                            _currentStock = Parser.toInt(value);
+                            _addcurrentStock = Parser.toInt(value);
                           },
                         ),
                       ),
