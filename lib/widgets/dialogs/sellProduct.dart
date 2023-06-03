@@ -1,4 +1,5 @@
 import 'package:jstock/constants/imports.dart';
+import 'package:jstock/main.dart';
 import 'package:jstock/utils/parser.dart';
 
 class SellProductDialog extends StatefulWidget {
@@ -29,6 +30,19 @@ class _SellProductDialogState extends State<SellProductDialog> {
       _currentAmount--;
       _amountController.text = _currentAmount.toString();
     }
+  }
+  Future<void> _showNotifincation(String title,String body) async {
+    const AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails('nextflow_noti_001', "แจ้งเตือนทั่วไป",
+        channelDescription: "ก็แจ้งเตือน",
+            importance: Importance.max,
+            priority: Priority.high,
+            ticker: 'ticker');
+    const NotificationDetails platfromChannelDetails = NotificationDetails(
+      android: androidNotificationDetails,
+    );
+
+    await flutterLocalNotificationsPlugin.show(0,title,body,platfromChannelDetails);
   }
 
   Future<void> _sellProduct() async {
@@ -65,6 +79,13 @@ class _SellProductDialogState extends State<SellProductDialog> {
           ),
           backgroundColor: Colors.green[400],
         ));
+        String nameProduct = widget.data['name'];
+        int amountProduct = widget.data['amount']-_currentAmount;
+        if (amountProduct<=10) {
+          _showNotifincation("สินค้ากำลังจะหมด"," $nameProduct เหลือแค่ $amountProduct ชิ้น");
+        }
+
+
 
         Navigator.pushReplacement(
           context,

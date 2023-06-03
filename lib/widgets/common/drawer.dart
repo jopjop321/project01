@@ -77,22 +77,6 @@ class DrawerWidget extends StatelessWidget {
               // นำทางไปยังหน้า Settings
             },
           ),
-          // ListTile(
-          //   leading: const Icon(Icons.edit),
-          //   title: const Text('Edit', style: TextStyle(fontSize: 18)),
-          //   onTap: () {
-          //     Navigator.pop(context);
-          //     // นำทางไปยังหน้า Settings
-          //   },
-          // ),
-          // ListTile(
-          //   leading: const Icon(Icons.add_shopping_cart),
-          //   title: const Text('Add Stock', style: TextStyle(fontSize: 18)),
-          //   onTap: () {
-          //     Navigator.pop(context);
-          //     // นำทางไปยังหน้า Settings
-          //   },
-          // ),
           const Divider(color: Colors.grey),
           ListTile(
             leading: const Icon(Icons.logout),
