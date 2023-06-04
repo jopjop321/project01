@@ -18,7 +18,7 @@ class _PosScreenState extends State<PosScreen> {
     Product(name: 'Product 1', price: 10.0),
     Product(name: 'Product 2', price: 15.0),
     Product(name: 'Product 3', price: 20.0),
-    _buildProducts();
+    // _buildProducts();
   ];
 
   List<Product> _buildProducts(
