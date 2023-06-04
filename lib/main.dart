@@ -1,5 +1,7 @@
 import 'package:jstock/constants/imports.dart';
 import 'package:jstock/firebase_options.dart';
+import 'package:jstock/view/posScreen.dart';
+
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -49,6 +51,9 @@ class MyApp extends StatelessWidget {
         // ),
         home: LogoScreen(),
         debugShowCheckedModeBanner: false,
+        routes: {
+          '/pos': (context) => PosScreen(),
+        },
       ),
     );
   }
