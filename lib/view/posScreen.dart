@@ -24,7 +24,7 @@ class _PosScreenState extends State<PosScreen> {
             costPrice: data['cost_price'],
             name: data['name'],
             price: data['normal_price'],
-            quantity: data['amount'],
+            amount: data['amount'],
           ),
         );
       }
@@ -56,9 +56,11 @@ class _PosScreenState extends State<PosScreen> {
 
       for (var item in data) {
         await db.collection('sells').add(item);
-        // await db.collection('sells').doc(item['code']).update({
-        //   'amount': ,
-        // });
+      }
+      for (var i = 0; i < _products.length; i++) {
+        await db.collection('products').doc(_products[i].code).update({
+          'amount':_products[i].amount - _products[i].quantity,
+        });
       }
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -101,7 +103,7 @@ class _PosScreenState extends State<PosScreen> {
                 return ListTile(
                   title: Text(_products[index].name),
                   subtitle:
-                      Text('฿${_products[index].price.toStringAsFixed(2)}\nจำนวน ${_products[index].quantity} ชิ้น'),
+                      Text('฿${_products[index].price.toStringAsFixed(2)}\nจำนวน ${_products[index].amount} ชิ้น'),
                   trailing: QuantitySelector(
                     // quantity: _products[index].quantity,
                     onChanged: (value) {
@@ -199,6 +201,7 @@ class Product {
   final double costPrice;
   final String name;
   final double price;
+  final int amount;
   int quantity;
 
   Product({
@@ -207,6 +210,7 @@ class Product {
     required this.price,
     required this.code,
     required this.costPrice,
+    required this.amount,
   });
 }
 
