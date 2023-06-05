@@ -7,31 +7,21 @@ class PosScreen extends StatefulWidget {
 }
 
 class _PosScreenState extends State<PosScreen> {
+  final List<Product> _products = [];
 
-  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
-      _listProducts() async {
+  Future<List<Product>> _listProducts() async {
     final db = FirebaseFirestore.instance;
     final snapshot = await db.collection('products').get();
-    return snapshot.docs;
-  }
-  List<Product> products = [
-    Product(name: 'Product 1', price: 10.0),
-    Product(name: 'Product 2', price: 15.0),
-    Product(name: 'Product 3', price: 20.0),
-    // _buildProducts();
-  ];
 
-  List<Product> _buildProducts(
-      List<QueryDocumentSnapshot<Map<String, dynamic>>> data) {
-    List<Product> list = [];
-
-    for (var product in data) {
-      list.add(
-        Product(name: product.data()['name'], price: product.data()['normal_price']),
+    for (var product in snapshot.docs) {
+      _products.add(
+        Product(
+            name: product.data()['name'],
+            price: product.data()['normal_price']),
       );
     }
 
-    return list;
+    return _products;
   }
 
   double totalAmount = 0.0;
@@ -41,22 +31,31 @@ class _PosScreenState extends State<PosScreen> {
     return Scaffold(
       appBar: AppBarWidget(),
       drawer: DrawerWidget(),
-      body: ListView.builder(
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(products[index].name),
-            subtitle: Text('\$${products[index].price.toStringAsFixed(2)}'),
-            trailing: QuantitySelector(
-              // quantity: products[index].quantity,
-              onChanged: (value) {
-                setState(() {
-                  products[index].quantity = value;
-                  calculateTotalAmount();
-                });
+      body: FutureBuilder<List<Product>>(
+        future: _listProducts(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: _products.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(_products[index].name),
+                  subtitle:
+                      Text('\$${_products[index].price.toStringAsFixed(2)}'),
+                  trailing: QuantitySelector(
+                    // quantity: _products[index].quantity,
+                    onChanged: (value) {
+                      setState(() {
+                        _products[index].quantity = value;
+                        calculateTotalAmount();
+                      });
+                    },
+                  ),
+                );
               },
-            ),
-          );
+            );
+          }
+          return const Center(child: CircularProgressIndicator());
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -71,7 +70,7 @@ class _PosScreenState extends State<PosScreen> {
 
   void calculateTotalAmount() {
     double amount = 0.0;
-    for (var product in products) {
+    for (var product in _products) {
       amount += product.price * product.quantity;
     }
     setState(() {
@@ -85,19 +84,21 @@ class _PosScreenState extends State<PosScreen> {
       builder: (context) {
         return AlertDialog(
           title: Text('Receipt'),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Items:'),
-              for (var product in products)
-                if (product.quantity > 0)
-                  Text(
-                    '${product.name}: ${product.quantity} x \$${product.price.toStringAsFixed(2)} = \$${(product.price * product.quantity).toStringAsFixed(2)}',
-                  ),
-              SizedBox(height: 16),
-              Text('Total Amount: \$${totalAmount.toStringAsFixed(2)}'),
-            ],
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Items:'),
+                for (var product in _products)
+                  if (product.quantity > 0)
+                    Text(
+                      '${product.name}: ${product.quantity} x \$${product.price.toStringAsFixed(2)} = \$${(product.price * product.quantity).toStringAsFixed(2)}',
+                    ),
+                SizedBox(height: 16),
+                Text('Total Amount: \$${totalAmount.toStringAsFixed(2)}'),
+              ],
+            ),
           ),
           actions: [
             TextButton(
