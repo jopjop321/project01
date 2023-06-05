@@ -1,5 +1,6 @@
 import 'package:navigation_drawer_menu/navigation_drawer.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 //flutter
 export 'package:flutter/material.dart';
@@ -11,6 +12,8 @@ export 'package:navigation_drawer_menu/navigation_drawer_menu_frame.dart';
 export 'package:navigation_drawer_menu/navigation_drawer_state.dart';
 export 'package:shared_preferences/shared_preferences.dart';
 export 'package:fluttertoast/fluttertoast.dart';
+export 'package:flutter_local_notifications/flutter_local_notifications.dart';
+export 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 //utils
 export 'package:jstock/utils/texttable.dart';

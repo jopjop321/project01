@@ -21,6 +21,9 @@ class _ProductScreenState extends State<ProductScreen> {
   final NavigationDrawerState state = NavigationDrawerState();
   bool isDrawerOpen = false;
   String? scanresult;
+  TextEditingController _searchController = TextEditingController();
+  ScrollController _scrollController = ScrollController();
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> _searchResults = [];
 
   void toggleDrawer() {
     setState(
@@ -67,12 +70,27 @@ class _ProductScreenState extends State<ProductScreen> {
     return list;
   }
 
+  
+
+  void _performSearch(String value) async {
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> products =
+        await _listProducts();
+    setState(() {
+      _searchResults = products.where((product) {
+        final productName = product.data()['name'].toString().toLowerCase();
+        return productName.contains(value.toLowerCase());
+      }).toList();
+    });
+  }
+
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarWidget(),
       body: SafeArea(
         child: ListView(
+          controller: _scrollController,
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
           scrollDirection: Axis.vertical,
           children: [
@@ -116,14 +134,33 @@ class _ProductScreenState extends State<ProductScreen> {
                 ),
               ],
             ),
+            // const SizedBox(
+            //   height: 20,
+            // ),
+            TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Search for products',
+              ),
+              onChanged: _performSearch,
+            ),
             const SizedBox(
               height: 20,
             ),
             FutureBuilder<List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
               future: _listProducts(),
               builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return GridView(
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  List<QueryDocumentSnapshot<Map<String, dynamic>>> products =
+                      snapshot.data!;
+                  List<QueryDocumentSnapshot<Map<String, dynamic>>>
+                      displayedProducts =
+                      _searchResults.isNotEmpty ? _searchResults : products;
+                  return GridView.builder(
                     padding: EdgeInsets.zero,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
@@ -132,18 +169,16 @@ class _ProductScreenState extends State<ProductScreen> {
                       mainAxisSpacing: 10,
                       childAspectRatio: 153 / 230,
                     ),
+                    itemCount: displayedProducts.length,
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
-                    children: [
-                      ..._buildProducts(snapshot.data!),
-                    ],
+                    itemBuilder: (context, index) {
+                      return CardContainer(
+                        data: displayedProducts[index].data(),
+                      );
+                    },
                   );
                 }
-
-                return Container(
-                  alignment: Alignment.center,
-                  child: const CircularProgressIndicator(),
-                );
               },
             ),
             const SizedBox(
@@ -156,3 +191,15 @@ class _ProductScreenState extends State<ProductScreen> {
     );
   }
 }
+
+// class NotesNotifier with ChangeNotifier {
+//   Iterable<NoteModel> result = [];
+
+//   void search(String value) {
+//     Box<NoteModel> eventsBox = Hive.box<NoteModel>('notes');
+//     result = eventsBox.values.where(
+//       (e) => e.text.toLowerCase().contains(value.toLowerCase()),
+//     );
+//     notifyListeners();
+//   }
+// }
