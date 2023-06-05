@@ -24,6 +24,7 @@ class _PosScreenState extends State<PosScreen> {
             costPrice: data['cost_price'],
             name: data['name'],
             price: data['normal_price'],
+            quantity: data['amount'],
           ),
         );
       }
@@ -35,6 +36,7 @@ class _PosScreenState extends State<PosScreen> {
   Future<void> _submit() async {
     try {
       final db = FirebaseFirestore.instance;
+      
 
       List<Map<String, dynamic>> data =
           _products.where((e) => e.quantity > 0).map((product) {
@@ -50,8 +52,13 @@ class _PosScreenState extends State<PosScreen> {
         };
       }).toList();
 
+      
+
       for (var item in data) {
         await db.collection('sells').add(item);
+        // await db.collection('sells').doc(item['code']).update({
+        //   'amount': ,
+        // });
       }
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -66,7 +73,12 @@ class _PosScreenState extends State<PosScreen> {
         backgroundColor: Colors.green[400],
       ));
 
-      Navigator.pop(context);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const DashboardScreen(),
+        ),
+      );
     } on Error catch (e) {
       print(e);
     }
@@ -89,7 +101,7 @@ class _PosScreenState extends State<PosScreen> {
                 return ListTile(
                   title: Text(_products[index].name),
                   subtitle:
-                      Text('\$${_products[index].price.toStringAsFixed(2)}'),
+                      Text('฿${_products[index].price.toStringAsFixed(2)}\nจำนวน ${_products[index].quantity} ชิ้น'),
                   trailing: QuantitySelector(
                     // quantity: _products[index].quantity,
                     onChanged: (value) {
@@ -131,20 +143,35 @@ class _PosScreenState extends State<PosScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Receipt'),
+          title: const Text('รายการ'),
           content: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('Items:'),
+                // const Text('Items:'),
                 for (var product in _products)
                   if (product.quantity > 0)
-                    Text(
-                      '${product.name}: ${product.quantity} x \$${product.price.toStringAsFixed(2)} = \$${(product.price * product.quantity).toStringAsFixed(2)}',
+                    Row(
+                      children: [
+                        Text(
+                          '${product.name}',
+                          overflow: TextOverflow.clip,
+                        ),
+                        Spacer(),
+                        Text(
+                          '${(product.price * product.quantity).toStringAsFixed(2)}฿',
+                        ),
+                      ],
                     ),
+
                 const SizedBox(height: 16),
-                Text('Total Amount: \$${totalAmount.toStringAsFixed(2)}'),
+                Text('รวม: ${totalAmount.toStringAsFixed(2)}฿'),
+                Image.asset(
+                      'assets/images/qrcode.png',
+                      fit: BoxFit.contain,
+                    ),
+                
               ],
             ),
           ),

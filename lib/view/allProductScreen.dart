@@ -117,7 +117,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           },
                         );
                       },
-                      child: const Row(
+                      child: Row(
                         children: [
                           Icon(Icons.add_circle_outline),
                           SizedBox(

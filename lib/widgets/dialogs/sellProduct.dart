@@ -79,10 +79,14 @@ class _SellProductDialogState extends State<SellProductDialog> {
           ),
           backgroundColor: Colors.green[400],
         ));
+        
         String nameProduct = widget.data['name'];
         int amountProduct = widget.data['amount']-_currentAmount;
         if (amountProduct<=10) {
           _showNotifincation("สินค้ากำลังจะหมด"," $nameProduct เหลือแค่ $amountProduct ชิ้น");
+        }
+        else if(amountProduct == 0) {
+          _showNotifincation("สินค้าหมดแล้ว"," $nameProduct อย่าลืมสั่งสินค้าเพิ่มด้วย");
         }
 
 
