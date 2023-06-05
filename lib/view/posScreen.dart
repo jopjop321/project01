@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:jstock/constants/imports.dart';
 
 class PosScreen extends StatefulWidget {
+  const PosScreen({super.key});
+
   @override
   _PosScreenState createState() => _PosScreenState();
 }
@@ -13,15 +15,61 @@ class _PosScreenState extends State<PosScreen> {
     final db = FirebaseFirestore.instance;
     final snapshot = await db.collection('products').get();
 
-    for (var product in snapshot.docs) {
-      _products.add(
-        Product(
-            name: product.data()['name'],
-            price: product.data()['normal_price']),
-      );
+    if (_products.isEmpty) {
+      for (var product in snapshot.docs) {
+        Map<String, dynamic> data = product.data();
+        _products.add(
+          Product(
+            code: data['code'],
+            costPrice: data['cost_price'],
+            name: data['name'],
+            price: data['normal_price'],
+          ),
+        );
+      }
     }
 
     return _products;
+  }
+
+  Future<void> _submit() async {
+    try {
+      final db = FirebaseFirestore.instance;
+
+      List<Map<String, dynamic>> data =
+          _products.where((e) => e.quantity > 0).map((product) {
+        return {
+          'amount': product.quantity,
+          'buy_price': product.price,
+          'code': product.code,
+          'cost_price': product.costPrice,
+          'date': Timestamp.now(),
+          'isMember': false,
+          'name': product.name,
+          'total_price': product.quantity * product.price,
+        };
+      }).toList();
+
+      for (var item in data) {
+        await db.collection('sells').add(item);
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: const Text(
+          'Sell Product Successfully',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+          ),
+        ),
+        backgroundColor: Colors.green[400],
+      ));
+
+      Navigator.pop(context);
+    } on Error catch (e) {
+      print(e);
+    }
   }
 
   double totalAmount = 0.0;
@@ -63,7 +111,7 @@ class _PosScreenState extends State<PosScreen> {
           // ดำเนินการที่ต้องการเมื่อกดปุ่มสรุปรายการสินค้า
           showReceiptDialog();
         },
-        child: Icon(Icons.check),
+        child: const Icon(Icons.check),
       ),
     );
   }
@@ -83,19 +131,19 @@ class _PosScreenState extends State<PosScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Receipt'),
+          title: const Text('Receipt'),
           content: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Items:'),
+                const Text('Items:'),
                 for (var product in _products)
                   if (product.quantity > 0)
                     Text(
                       '${product.name}: ${product.quantity} x \$${product.price.toStringAsFixed(2)} = \$${(product.price * product.quantity).toStringAsFixed(2)}',
                     ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Text('Total Amount: \$${totalAmount.toStringAsFixed(2)}'),
               ],
             ),
@@ -106,7 +154,11 @@ class _PosScreenState extends State<PosScreen> {
                 // ดำเนินการที่ต้องการเมื่อกดปุ่มปิดใบเสร็จ
                 Navigator.pop(context);
               },
-              child: Text('Close'),
+              child: const Text('Close'),
+            ),
+            TextButton(
+              onPressed: _submit,
+              child: const Text('Confirm'),
             ),
           ],
         );
@@ -116,17 +168,25 @@ class _PosScreenState extends State<PosScreen> {
 }
 
 class Product {
+  final String code;
+  final double costPrice;
   final String name;
   final double price;
   int quantity;
 
-  Product({required this.name, required this.price, this.quantity = 0});
+  Product({
+    this.quantity = 0,
+    required this.name,
+    required this.price,
+    required this.code,
+    required this.costPrice,
+  });
 }
 
 class QuantitySelector extends StatefulWidget {
   final ValueChanged<int> onChanged;
 
-  QuantitySelector({required this.onChanged});
+  const QuantitySelector({super.key, required this.onChanged});
 
   @override
   _QuantitySelectorState createState() => _QuantitySelectorState();
@@ -149,7 +209,7 @@ class _QuantitySelectorState extends State<QuantitySelector> {
               }
             });
           },
-          icon: Icon(Icons.remove),
+          icon: const Icon(Icons.remove),
         ),
         Text(quantity.toString()),
         IconButton(
@@ -159,7 +219,7 @@ class _QuantitySelectorState extends State<QuantitySelector> {
               widget.onChanged(quantity);
             });
           },
-          icon: Icon(Icons.add),
+          icon: const Icon(Icons.add),
         ),
       ],
     );
