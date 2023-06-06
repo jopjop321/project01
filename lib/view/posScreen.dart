@@ -129,7 +129,7 @@ class _PosScreenState extends State<PosScreen> {
                 return ListTile(
                   title: Text(_products[index].name),
                   subtitle: Text(
-                      '฿${_products[index].price.toStringAsFixed(2)}\n amount ${_products[index].amount} '),
+                      '฿${_products[index].price.toStringAsFixed(2)}\n amount: ${_products[index].amount} '),
                   trailing: QuantitySelector(
                     // quantity: _products[index].quantity,
                     onChanged: (value) {

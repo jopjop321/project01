@@ -13,6 +13,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final NavigationDrawerState state = NavigationDrawerState();
   bool isDrawerOpen = false;
   String? scanresult;
+  
 
   void toggleDrawer() {
     setState(
@@ -21,6 +22,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       },
     );
   }
+
+
 
   Future<Map<String, double>> _fetchData() async {
     final db = FirebaseFirestore.instance;
@@ -150,6 +153,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ],
                   );
                 }),
+            const SizedBox(
+              height: 20,
+            ),
+            const Text(
+              'สินค้าขายดี',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colorconstants.texttitledashboard,
+              ),
+            ),
             const SizedBox(
               height: 20,
             ),
