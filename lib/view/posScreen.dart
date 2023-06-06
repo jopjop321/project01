@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jstock/constants/imports.dart';
+import 'package:jstock/main.dart';
 
 class PosScreen extends StatefulWidget {
   const PosScreen({super.key});
@@ -33,10 +34,25 @@ class _PosScreenState extends State<PosScreen> {
     return _products;
   }
 
+  Future<void> _showNotifincation(int index, String title, String body) async {
+    const AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails('nextflow_noti_001', "แจ้งเตือนทั่วไป",
+            channelDescription: "ก็แจ้งเตือน",
+            importance: Importance.max,
+            priority: Priority.high,
+            ticker: 'ticker');
+    const NotificationDetails platfromChannelDetails = NotificationDetails(
+      android: androidNotificationDetails,
+    );
+
+    await flutterLocalNotificationsPlugin.show(
+        index, title, body, platfromChannelDetails);
+  }
+
   Future<void> _submit() async {
+    int index = 1;
     try {
       final db = FirebaseFirestore.instance;
-      
 
       List<Map<String, dynamic>> data =
           _products.where((e) => e.quantity > 0).map((product) {
@@ -52,15 +68,25 @@ class _PosScreenState extends State<PosScreen> {
         };
       }).toList();
 
-      
-
       for (var item in data) {
         await db.collection('sells').add(item);
       }
       for (var i = 0; i < _products.length; i++) {
         await db.collection('products').doc(_products[i].code).update({
-          'amount':_products[i].amount - _products[i].quantity,
+          'amount': _products[i].amount - _products[i].quantity,
         });
+
+        if (_products[i].quantity >= 1) {
+          String nameProduct = _products[i].name;
+          int amountProduct = _products[i].amount - _products[i].quantity;
+          if (amountProduct <= 10) {
+            _showNotifincation(index++, "สินค้ากำลังจะหมด",
+                " $nameProduct เหลือแค่ $amountProduct ชิ้น");
+          } else if (amountProduct == 0) {
+            _showNotifincation(index++, "สินค้าหมดแล้ว",
+                " $nameProduct อย่าลืมสั่งสินค้าเพิ่มด้วย");
+          }
+        }
       }
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -102,8 +128,8 @@ class _PosScreenState extends State<PosScreen> {
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text(_products[index].name),
-                  subtitle:
-                      Text('฿${_products[index].price.toStringAsFixed(2)}\nจำนวน ${_products[index].amount} ชิ้น'),
+                  subtitle: Text(
+                      '฿${_products[index].price.toStringAsFixed(2)}\n amount ${_products[index].amount} '),
                   trailing: QuantitySelector(
                     // quantity: _products[index].quantity,
                     onChanged: (value) {
@@ -145,7 +171,7 @@ class _PosScreenState extends State<PosScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('รายการ'),
+          title: const Text('List'),
           content: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -168,12 +194,11 @@ class _PosScreenState extends State<PosScreen> {
                     ),
 
                 const SizedBox(height: 16),
-                Text('รวม: ${totalAmount.toStringAsFixed(2)}฿'),
+                Text('Total Price: ${totalAmount.toStringAsFixed(2)}฿'),
                 Image.asset(
-                      'assets/images/qrcode.png',
-                      fit: BoxFit.contain,
-                    ),
-                
+                  'assets/images/qrcode.png',
+                  fit: BoxFit.contain,
+                ),
               ],
             ),
           ),

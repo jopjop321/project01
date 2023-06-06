@@ -1,4 +1,5 @@
 import 'package:jstock/constants/imports.dart';
+import 'package:jstock/view/posScreen.dart';
 
 class DrawerWidget extends StatelessWidget {
   @override
@@ -37,6 +38,7 @@ class DrawerWidget extends StatelessWidget {
               ],
             ),
           ),
+          
           ListTile(
             leading: const Icon(Icons.home),
             title: const Text('Home', style: TextStyle(fontSize: 18)),
@@ -45,6 +47,18 @@ class DrawerWidget extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const DashboardScreen(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.add_shopping_cart),
+            title: const Text('Pos', style: TextStyle(fontSize: 18)),
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PosScreen(),
                 ),
               );
             },
