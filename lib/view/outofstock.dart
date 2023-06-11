@@ -3,19 +3,19 @@ import 'package:jstock/constants/imports.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:jstock/widgets/dialogs/addProduct.dart';
 
-class ProductScreen extends StatefulWidget {
+class OutofstockScreen extends StatefulWidget {
   final bool addProduct;
 
-  const ProductScreen({
+  const OutofstockScreen({
     super.key,
     this.addProduct = false,
   });
 
   @override
-  State<ProductScreen> createState() => _ProductScreenState();
+  State<OutofstockScreen> createState() => _OutofstockScreenState();
 }
 
-class _ProductScreenState extends State<ProductScreen> {
+class _OutofstockScreenState extends State<OutofstockScreen> {
   final formKey = GlobalKey<FormState>();
   Profile profile = Profile();
   final NavigationDrawerState state = NavigationDrawerState();
@@ -75,8 +75,8 @@ class _ProductScreenState extends State<ProductScreen> {
         await _listProducts();
     setState(() {
       _searchResults = products.where((product) {
-        final productName = product.data()['name'].toString().toLowerCase();
-        return productName.contains(value.toLowerCase());
+        final productName = product.data()['amount'];
+        return productName.contains(value);
       }).toList();
     });
   }
@@ -94,7 +94,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 Row(
                   children: [
                     const Text(
-                      'สินค้า',
+                      'สินค้าที่ใกล้จะหมด',
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
@@ -102,45 +102,45 @@ class _ProductScreenState extends State<ProductScreen> {
                       ),
                     ),
                     const Spacer(),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colorconstants.blue195DD1,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return const AddProductDialog();
-                          },
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          Icon(Icons.add_circle_outline),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            "   เพิ่มสินค้า     ",
-                          ),
-                        ],
-                      ),
-                    ),
+                    // ElevatedButton(
+                    //   style: ElevatedButton.styleFrom(
+                    //     backgroundColor: Colorconstants.blue195DD1,
+                    //     shape: RoundedRectangleBorder(
+                    //       borderRadius: BorderRadius.circular(8),
+                    //     ),
+                    //   ),
+                    //   onPressed: () {
+                    //     showDialog(
+                    //       context: context,
+                    //       builder: (BuildContext context) {
+                    //         return const AddProductDialog();
+                    //       },
+                    //     );
+                    //   },
+                    //   child: Row(
+                    //     children: [
+                    //       Icon(Icons.add_circle_outline),
+                    //       SizedBox(
+                    //         width: 5,
+                    //       ),
+                    //       Text(
+                    //         "   เพิ่มสินค้า     ",
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
                 // const SizedBox(
                 //   height: 20,
                 // ),
-                TextField(
-                  controller: _searchController,
-                  decoration: const InputDecoration(
-                    hintText: 'ค้นหาสินค้า',
-                  ),
-                  onChanged: _performSearch,
-                ),
+                // TextField(
+                //   controller: _searchController,
+                //   decoration: const InputDecoration(
+                //     hintText: 'ค้นหาสินค้า',
+                //   ),
+                //   onChanged: _performSearch,
+                // ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -156,8 +156,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       List<QueryDocumentSnapshot<Map<String, dynamic>>>
                           products = snapshot.data!;
                       List<QueryDocumentSnapshot<Map<String, dynamic>>>
-                          displayedProducts =
-                          _searchResults.isNotEmpty ? _searchResults : products;
+                          displayedProducts = products;
                       return GridView.builder(
                         padding: EdgeInsets.zero,
                         physics: const NeverScrollableScrollPhysics(),
@@ -172,9 +171,12 @@ class _ProductScreenState extends State<ProductScreen> {
                         shrinkWrap: true,
                         scrollDirection: Axis.vertical,
                         itemBuilder: (context, index) {
-                          return CardContainer(
+                          // if (displayedProducts[index].data()['amount'] <10 ) {
+                            return CardContainer(
                             data: displayedProducts[index].data(),
                           );
+                          // }
+                          
                         },
                       );
                     }

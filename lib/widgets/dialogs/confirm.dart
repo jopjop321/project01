@@ -22,14 +22,14 @@ class ConfirmDialog extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: const Text('Cancel'),
+          child: const Text('ยกเลิก'),
         ),
         TextButton(
           onPressed: () {
             if (onConfirm != null) onConfirm!();
           },
           child: const Text(
-            'Confirm',
+            'ยืนยัน',
             style: TextStyle(
               color: Colors.red,
             ),

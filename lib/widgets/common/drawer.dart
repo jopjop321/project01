@@ -21,7 +21,7 @@ class DrawerWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: const [
                 Text(
-                  'Menu',
+                  'เมนู',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,
@@ -29,7 +29,7 @@ class DrawerWidget extends StatelessWidget {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  'Welcome,',
+                  'ยินดีต้อนรับ,',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -41,7 +41,7 @@ class DrawerWidget extends StatelessWidget {
           
           ListTile(
             leading: const Icon(Icons.home),
-            title: const Text('Home', style: TextStyle(fontSize: 18)),
+            title: const Text('หน้าแรก', style: TextStyle(fontSize: 18)),
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -53,7 +53,7 @@ class DrawerWidget extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.add_shopping_cart),
-            title: const Text('Pos', style: TextStyle(fontSize: 18)),
+            title: const Text('ขายสินค้า', style: TextStyle(fontSize: 18)),
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -65,7 +65,7 @@ class DrawerWidget extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.trolley),
-            title: const Text('Product', style: TextStyle(fontSize: 18)),
+            title: const Text('สินค้า', style: TextStyle(fontSize: 18)),
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -77,7 +77,7 @@ class DrawerWidget extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.add_sharp),
-            title: const Text('Add Product', style: TextStyle(fontSize: 18)),
+            title: const Text('เพิ่มสินค้า', style: TextStyle(fontSize: 18)),
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -94,7 +94,7 @@ class DrawerWidget extends StatelessWidget {
           const Divider(color: Colors.grey),
           ListTile(
             leading: const Icon(Icons.logout),
-            title: const Text('Logout', style: TextStyle(fontSize: 18)),
+            title: const Text('ออกจากระบบ', style: TextStyle(fontSize: 18)),
             onTap: () async {
               try {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -118,6 +118,7 @@ class DrawerWidget extends StatelessWidget {
               }
             },
           ),
+          
         ],
       ),
     );

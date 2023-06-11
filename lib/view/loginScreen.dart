@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'LOGIN',
+                            'เข้าสู่ระบบ',
                             style: TextStyle(
                               fontSize: 30,
                               fontWeight: FontWeight.bold,
@@ -57,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Row(
                             children: [
                               Text(
-                                'Username',
+                                'อีเมล',
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.normal,
@@ -68,12 +68,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           TextFormField(
                             validator: MultiValidator([
-                              RequiredValidator(errorText: "ใส่Usernameด้วย")
+                              RequiredValidator(errorText: "กรุณาใส่อีเมล")
                             ]),
                             keyboardType: TextInputType.emailAddress,
                             decoration: InputDecoration(
                               labelText: '',
-                              hintText: "Username",
+                              hintText: "อีเมล",
                               border: OutlineInputBorder(),
                             ),
                             onSaved: (String? email) {
@@ -84,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Row(
                             children: [
                               Text(
-                                'Password',
+                                'รหัสผ่าน',
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.normal,
@@ -95,12 +95,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           TextFormField(
                             validator: MultiValidator([
-                              RequiredValidator(errorText: "ใส่Passwordด้วย"),
+                              RequiredValidator(errorText: "กรุณาใส่รหัสผ่าน"),
                             ]),
                             obscureText: true,
                             decoration: InputDecoration(
                               labelText: '',
-                              hintText: "Password",
+                              hintText: "รหัสผ่าน",
                               border: OutlineInputBorder(),
                               // suffixIcon: IconButton(
                               //   icon: Icon(
@@ -129,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             // padding: EdgeInsets.all(32),
                             child: ElevatedButton(
                               child: Text(
-                                "Login",
+                                "เข้าสู่ระบบ",
                               ),
                               style: ElevatedButton.styleFrom(
                                   minimumSize: Size(360, 60)),

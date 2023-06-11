@@ -18,12 +18,12 @@ class TextTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
-      Text("$text1", style: TextStyle(color: color)),
+      Text("$text1".padRight(25 ,' '), style: TextStyle(color: color)),
       const Spacer(),
       const Spacer(),
-      Text("$text2", style: TextStyle(color: color)),
+      Text("$text2".padLeft(4 ,' '), style: TextStyle(color: color)),
       const Spacer(),
-      Text("$text3", style: TextStyle(color: color))
+      Text("$text3".padLeft(10 ,' '), style: TextStyle(color: color))
     ]);
     ;
   }

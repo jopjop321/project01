@@ -12,6 +12,10 @@ class PosScreen extends StatefulWidget {
 class _PosScreenState extends State<PosScreen> {
   final List<Product> _products = [];
 
+  TextEditingController _searchController = TextEditingController();
+  ScrollController _scrollController = ScrollController();
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> _searchResults = [];
+
   Future<List<Product>> _listProducts() async {
     final db = FirebaseFirestore.instance;
     final snapshot = await db.collection('products').get();
@@ -21,16 +25,15 @@ class _PosScreenState extends State<PosScreen> {
         Map<String, dynamic> data = product.data();
         _products.add(
           Product(
-            code: data['code'],
-            costPrice: data['cost_price'],
-            name: data['name'],
-            price: data['normal_price'],
-            amount: data['amount'],
-          ),
+              code: data['code'],
+              costPrice: data['cost_price'],
+              name: data['name'],
+              price: data['normal_price'],
+              amount: data['amount'],
+              sell: data['sell']),
         );
       }
     }
-
     return _products;
   }
 
@@ -51,6 +54,7 @@ class _PosScreenState extends State<PosScreen> {
 
   Future<void> _submit() async {
     int index = 1;
+
     try {
       final db = FirebaseFirestore.instance;
 
@@ -71,20 +75,22 @@ class _PosScreenState extends State<PosScreen> {
       for (var item in data) {
         await db.collection('sells').add(item);
       }
+
       for (var i = 0; i < _products.length; i++) {
         await db.collection('products').doc(_products[i].code).update({
           'amount': _products[i].amount - _products[i].quantity,
+          'sell': _products[i].sell + _products[i].quantity,
         });
 
         if (_products[i].quantity >= 1) {
           String nameProduct = _products[i].name;
           int amountProduct = _products[i].amount - _products[i].quantity;
-          if (amountProduct <= 10) {
-            _showNotifincation(index++, "สินค้ากำลังจะหมด",
-                " $nameProduct เหลือแค่ $amountProduct ชิ้น");
-          } else if (amountProduct == 0) {
+          if (amountProduct == 0) {
             _showNotifincation(index++, "สินค้าหมดแล้ว",
                 " $nameProduct อย่าลืมสั่งสินค้าเพิ่มด้วย");
+          } else if (amountProduct <= 10) {
+            _showNotifincation(index++, "สินค้ากำลังจะหมด",
+                " $nameProduct เหลือแค่ $amountProduct ชิ้น");
           }
         }
       }
@@ -129,7 +135,7 @@ class _PosScreenState extends State<PosScreen> {
                 return ListTile(
                   title: Text(_products[index].name),
                   subtitle: Text(
-                      '฿${_products[index].price.toStringAsFixed(2)}\n amount: ${_products[index].amount} '),
+                      '฿${_products[index].price.toStringAsFixed(2)}\n จำนวน: ${_products[index].amount} ชิ้น'),
                   trailing: QuantitySelector(
                     // quantity: _products[index].quantity,
                     onChanged: (value) {
@@ -149,7 +155,24 @@ class _PosScreenState extends State<PosScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // ดำเนินการที่ต้องการเมื่อกดปุ่มสรุปรายการสินค้า
-          showReceiptDialog();
+          bool wrong = false;
+          String wordwrong = "";
+          for (var i = 0; i < _products.length; i++) {
+            if (_products[i].amount - _products[i].quantity <= 0 ) {
+              wrong = true;
+              wordwrong =
+                  "$wordwrong" + "${_products[i].name} ไม่เพียงพอ" + "\n";
+            }
+          }
+
+          if (wrong == true) {
+            _showNotifincation(0, "สินค้าไม่เพียงพอ", wordwrong);
+            // Navigator.pop(context);
+          }
+          else {
+            showReceiptDialog();
+          }
+          
         },
         child: const Icon(Icons.check),
       ),
@@ -227,6 +250,7 @@ class Product {
   final String name;
   final double price;
   final int amount;
+  final int sell;
   int quantity;
 
   Product({
@@ -236,6 +260,7 @@ class Product {
     required this.code,
     required this.costPrice,
     required this.amount,
+    required this.sell,
   });
 }
 

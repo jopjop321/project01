@@ -51,7 +51,13 @@ class _SellProductDialogState extends State<SellProductDialog> {
         final db = FirebaseFirestore.instance;
         await db.collection('products').doc(widget.data['code']).update({
           'amount': widget.data['amount'] - _currentAmount,
+          'sell': widget.data['sell'] + _currentAmount,
         });
+
+        // final _currentsell = await db.collection('bestsell').doc(widget.data['code']).get(w);
+        // await db.collection('bestsell').doc(widget.data['code']).update({
+        //   'sell': _currentsell. - _currentAmount,
+        // });
 
         double price = _isMember
             ? widget.data['member_price']
@@ -82,7 +88,7 @@ class _SellProductDialogState extends State<SellProductDialog> {
         
         String nameProduct = widget.data['name'];
         int amountProduct = widget.data['amount']-_currentAmount;
-        if (amountProduct<=10) {
+        if (amountProduct<=10 && amountProduct != 0) {
           _showNotifincation("สินค้ากำลังจะหมด"," $nameProduct เหลือแค่ $amountProduct ชิ้น");
         }
         else if(amountProduct == 0) {
@@ -122,7 +128,7 @@ class _SellProductDialogState extends State<SellProductDialog> {
             Row(
               children: [
                 const Text(
-                  'Sell Product',
+                  'ขายสินค้า',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -150,7 +156,7 @@ class _SellProductDialogState extends State<SellProductDialog> {
                     ),
                     onPressed: () => Navigator.pop(context),
                     child: const Text(
-                      "Cancel",
+                      "ยกเลิก",
                       style: TextStyle(
                         fontSize: 12,
                         color: Colorconstants.gray,
@@ -210,7 +216,7 @@ class _SellProductDialogState extends State<SellProductDialog> {
             const SizedBox(
               width: double.infinity,
               child: Text(
-                'Amount',
+                'จำนวน',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
@@ -275,7 +281,7 @@ class _SellProductDialogState extends State<SellProductDialog> {
             const SizedBox(
               width: double.infinity,
               child: Text(
-                'Membership',
+                'สามาชิกหรือป่าว',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
@@ -316,7 +322,7 @@ class _SellProductDialogState extends State<SellProductDialog> {
                                   : Colors.grey[300],
                             ),
                             child: Text(
-                              'Yes',
+                              'ใช่',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: _isMember ? Colors.white : Colors.grey,
@@ -344,7 +350,7 @@ class _SellProductDialogState extends State<SellProductDialog> {
                                   : Colors.grey[300],
                             ),
                             child: Text(
-                              'No',
+                              'ไม่ใช่',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: !_isMember ? Colors.white : Colors.grey,
@@ -362,7 +368,7 @@ class _SellProductDialogState extends State<SellProductDialog> {
             const SizedBox(
               width: double.infinity,
               child: Text(
-                'Total',
+                'ราคารวม',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
@@ -393,7 +399,7 @@ class _SellProductDialogState extends State<SellProductDialog> {
                 ),
                 onPressed: _sellProduct,
                 child: const Text(
-                  "Confirm",
+                  "ยืนยัน",
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,

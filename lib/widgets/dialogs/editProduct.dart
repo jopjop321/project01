@@ -138,9 +138,9 @@ class _EditProductDialogState extends State<EditProductDialog> {
                 Row(
                   children: [
                     const Text(
-                      'Edit Product',
+                      'แก้ไขข้อมูลสินค้า',
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colorconstants.blue195DD1,
                       ),
@@ -166,7 +166,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
                         ),
                         onPressed: () => Navigator.pop(context),
                         child: const Text(
-                          "Cancel",
+                          "ยกเลิก",
                           style: TextStyle(
                             fontSize: 12,
                             color: Colorconstants.gray,
@@ -182,16 +182,16 @@ class _EditProductDialogState extends State<EditProductDialog> {
                   child: Column(
                     children: [
                       FormProduct(
-                        text: "Product Name",
+                        text: "ชื่อสินค้า",
                         controller: _nameController,
                       ),
                       FormProduct(
-                        text: "Product Code",
+                        text: "รหัสสินค้า",
                         disabled: true,
                         controller: _codeController,
                       ),
                       FormProduct(
-                        text: "Description",
+                        text: "รายละเอียด",
                         maxLines: 5,
                         controller: _descController,
                       ),
@@ -201,7 +201,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
                 const SizedBox(height: 10),
                 Row(children: [
                   const Text(
-                    'Image',
+                    'รูปภาพ',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 14,
@@ -269,22 +269,22 @@ class _EditProductDialogState extends State<EditProductDialog> {
                 ],
                 const SizedBox(height: 20),
                 FormProduct(
-                  text: "Cost Price",
+                  text: "ราคาต้นทุน",
                   inputType: TextInputType.number,
                   controller: _costPriceController,
                 ),
                 FormProduct(
-                  text: "Normal Price",
+                  text: "ราคาทั่วไป",
                   inputType: TextInputType.number,
                   controller: _normalPriceController,
                 ),
                 FormProduct(
-                  text: "Member Price",
+                  text: "ราคาสมาชิก",
                   inputType: TextInputType.number,
                   controller: _memberPriceController,
                 ),
                 FormProduct(
-                  text: "Amount",
+                  text: "จำนวน",
                   inputType: TextInputType.number,
                   controller: _amountController,
                 ),
@@ -297,7 +297,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
                     ),
                     onPressed: _saveProduct,
                     child: const Text(
-                      "Save",
+                      "บันทึก",
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

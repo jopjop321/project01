@@ -88,9 +88,9 @@ class _ManageProductStockDialogState extends State<ManageProductStockDialog> {
             Row(
               children: [
                 const Text(
-                  'Add Stock',
+                  'เพิ่มจำนวนสินค้า',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colorconstants.blue195DD1,
                   ),
@@ -116,7 +116,7 @@ class _ManageProductStockDialogState extends State<ManageProductStockDialog> {
                     ),
                     onPressed: () => Navigator.pop(context),
                     child: const Text(
-                      "Cancel",
+                      "ยกเลิก",
                       style: TextStyle(
                         fontSize: 12,
                         color: Colorconstants.gray,
@@ -176,7 +176,7 @@ class _ManageProductStockDialogState extends State<ManageProductStockDialog> {
             const SizedBox(
               width: double.infinity,
               child: Text(
-                'Amount',
+                'จำนวน',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
@@ -246,7 +246,7 @@ class _ManageProductStockDialogState extends State<ManageProductStockDialog> {
                 ),
                 onPressed: _saveProduct,
                 child: const Text(
-                  "Confirm",
+                  "ยืนยัน",
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,

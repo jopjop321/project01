@@ -13,7 +13,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final NavigationDrawerState state = NavigationDrawerState();
   bool isDrawerOpen = false;
   String? scanresult;
-  
+  List<Map<String, dynamic>>? listdata = [];
 
   void toggleDrawer() {
     setState(
@@ -23,7 +23,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  Future<Map<String, dynamic>> _fetchData1() async {
+    final db = FirebaseFirestore.instance;
+    final products = await db.collection('products').get();
 
+    if (listdata!.isEmpty) {
+      for (var product in products.docs) {
+        Map<String, dynamic> _datalist = {
+          'name': product['name'],
+          'sell': product['sell'],
+          'image': product['image']
+        };
+        // print(_datalist['name']);
+        listdata!.add(_datalist);
+        // print(listdata);
+      }
+    }
+
+    // print(listdata);
+    listdata!.sort(((a, b) => b['sell'].compareTo(a['sell'])));
+    // print(listdata);
+
+    return {'data1': listdata![0], 'data2': listdata![1]};
+  }
 
   Future<Map<String, double>> _fetchData() async {
     final db = FirebaseFirestore.instance;
@@ -127,26 +149,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     children: [
                       CustomContainer(
                         color: Colorconstants.green009F3A,
-                        title: "Total Income",
-                        titleunit: "Baht",
+                        title: "รายได้",
+                        titleunit: "บาท",
                         unit: snapshot.data!['totalIncome'],
                       ),
                       CustomContainer(
                         color: Colorconstants.blue195DD1,
-                        title: "Monthly Income",
-                        titleunit: "Baht",
+                        title: "รายได้ต่อเดือน",
+                        titleunit: "บาท",
                         unit: snapshot.data!['monthlyIncome'],
                       ),
                       CustomContainer(
                         color: Colorconstants.orangeFA7A1E,
-                        title: "Total profit",
-                        titleunit: "Baht",
+                        title: "กำไร",
+                        titleunit: "บาท",
                         unit: snapshot.data!['totalProfit'],
                       ),
                       CustomContainer(
                         color: Colorconstants.redE73134,
-                        title: "Total Selling",
-                        titleunit: "Item",
+                        title: "จำนวนที่ขายได้",
+                        titleunit: "ชิ้น",
                         unit: snapshot.data!['totalSelling'],
                         intUnit: true,
                       ),
@@ -167,8 +189,36 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const SizedBox(
               height: 20,
             ),
+            FutureBuilder<Map<String, dynamic>>(
+                future: _fetchData1(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return GridView(
+                    padding: EdgeInsets.zero,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: 153 / 185,
+                    ),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: [
+                      CardContainerdashboard(data: snapshot.data!['data1']),
+                      CardContainerdashboard(data: snapshot.data!['data2']),
+                    ],
+                  );
+                }),
+            const SizedBox(
+              height: 20,
+            ),
             const Text(
-              'Latest History',
+              'รายการสินค้าที่ขายออก',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -199,9 +249,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                         child: const TextTable(
-                          text1: "Name",
-                          text2: "Unit",
-                          text3: "Amount",
+                          text1: "ชื่อ",
+                          text2: "จำนวนชิ้น",
+                          text3: "จำนวนเงิน",
                         ),
                       ),
                       Container(

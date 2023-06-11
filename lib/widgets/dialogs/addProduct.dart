@@ -42,7 +42,14 @@ class _AddProductDialogState extends State<AddProductDialog> {
           'normal_price': double.parse(_normalPriceController.text),
           'member_price': double.parse(_memberPriceController.text),
           'amount': int.parse(_amountController.text),
+          'sell': 0
         };
+
+        // Map<String, dynamic> databestsell = {
+        //   'name': _nameController.text,
+        //   'code': _codeController.text,
+        //   'sell': 0
+        // };
 
         if (_imageFile != null) {
           final storageRef = FirebaseStorage.instance.ref();
@@ -57,6 +64,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
         }
 
         await db.collection('products').doc(_codeController.text).set(data);
+        // await db.collection('bestsell').doc(_codeController.text).set(databestsell);
 
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: const Text(
@@ -119,7 +127,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 Row(
                   children: [
                     const Text(
-                      'Add Product',
+                      'เพิ่่มสินค้าใหม่',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -147,7 +155,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                         ),
                         onPressed: () => Navigator.pop(context),
                         child: const Text(
-                          "Cancel",
+                          "ยกเลิก",
                           style: TextStyle(
                             fontSize: 12,
                             color: Colorconstants.gray,
@@ -163,15 +171,15 @@ class _AddProductDialogState extends State<AddProductDialog> {
                   child: Column(
                     children: [
                       FormProduct(
-                        text: "Product Name",
+                        text: "ชื่อสินค้า",
                         controller: _nameController,
                       ),
                       FormProduct(
-                        text: "Product Code",
+                        text: "รหัสสินค้า",
                         controller: _codeController,
                       ),
                       FormProduct(
-                        text: "Description",
+                        text: "รายละเอียด",
                         maxLines: 5,
                         controller: _descController,
                       ),
@@ -181,7 +189,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 const SizedBox(height: 10),
                 Row(children: [
                   const Text(
-                    'Image',
+                    'รูปภาพ',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 14,
@@ -249,22 +257,22 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 ],
                 const SizedBox(height: 20),
                 FormProduct(
-                  text: "Cost Price",
+                  text: "ราคาต้นทุน",
                   inputType: TextInputType.number,
                   controller: _costPriceController,
                 ),
                 FormProduct(
-                  text: "Normal Price",
+                  text: "ราคาทั่วไป",
                   inputType: TextInputType.number,
                   controller: _normalPriceController,
                 ),
                 FormProduct(
-                  text: "Member Price",
+                  text: "ราคาสมาชิก",
                   inputType: TextInputType.number,
                   controller: _memberPriceController,
                 ),
                 FormProduct(
-                  text: "Amount",
+                  text: "จำนวน",
                   inputType: TextInputType.number,
                   controller: _amountController,
                 ),
@@ -277,7 +285,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                     ),
                     onPressed: _saveProduct,
                     child: const Text(
-                      "Save",
+                      "บันทึก",
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

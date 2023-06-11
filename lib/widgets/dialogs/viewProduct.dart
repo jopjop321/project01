@@ -16,7 +16,7 @@ class ViewProductDialog extends StatefulWidget {
 }
 
 class _ViewProductDialogState extends State<ViewProductDialog> {
-  List<String> options = ['Sell', 'Add', 'Edit', 'Delete'];
+  List<String> options = ['ขาย', 'เพิ่ม', 'แก้ไข', 'ลบ'];
 
   Future<void> _deleteProduct() async {
     try {
@@ -38,7 +38,7 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
     BuildContext widgetContext = context;
 
     switch (action) {
-      case 'Edit':
+      case 'แก้ไข':
         showDialog(
           context: context,
           builder: (context) {
@@ -46,14 +46,14 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
           },
         );
         break;
-      case 'Delete':
+      case 'ลบ':
         showDialog(
           context: context,
           builder: (context) {
             return ConfirmDialog(
-              title: 'Confirm Delete Product',
+              title: 'คุณยืนยันจะลบสินค้าชิ้นนี้ใช่หรือไม่',
               description:
-                  'Are you sure you want to delete product "${widget.data['code']}"?',
+                  'สินค้าที่คุณกำลังจะลบ "${widget.data['name']}" รหัส"${widget.data['code']}"?',
               onConfirm: () async {
                 await _deleteProduct();
 
@@ -69,7 +69,7 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
           },
         );
         break;
-      case 'Sell':
+      case 'ขาย':
         showDialog(
           context: context,
           builder: (context) {
@@ -77,7 +77,7 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
           },
         );
         break;
-      case 'Add':
+      case 'เพิ่ม':
         showDialog(
           context: context,
           builder: (context) {
@@ -136,7 +136,7 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
                       hint: const Padding(
                         padding: EdgeInsets.only(left: 10, right: 10),
                         child: Text(
-                          'Action',
+                          'เพิ่มเติม',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -211,21 +211,21 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
             const SizedBox(height: 20),
             Row(
               children: [
-                const Text("Cost"),
+                const Text("ต้นทุน"),
                 const Spacer(),
                 Text("${widget.data['cost_price'] ?? 0}฿")
               ],
             ),
             Row(
               children: [
-                const Text("Price"),
+                const Text("ราคาคนทั่วไป"),
                 const Spacer(),
                 Text("${widget.data['normal_price'] ?? 0}฿")
               ],
             ),
             Row(
               children: [
-                const Text("Member"),
+                const Text("ราคาสมาชิก"),
                 const Spacer(),
                 Text("${widget.data['member_price'] ?? 0}฿")
               ],

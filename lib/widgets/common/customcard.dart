@@ -88,7 +88,7 @@ class CardContainer extends StatelessWidget {
                   child: Row(
                     children: [
                       const Text(
-                        "Remaining",
+                        "คงเหลือ",
                         style: TextStyle(
                           color: Colorconstants.white,
                           fontSize: 10,
@@ -109,18 +109,133 @@ class CardContainer extends StatelessWidget {
               const SizedBox(height: 5),
               Row(
                 children: [
-                  const Text("Price"),
+                  const Text("ทั่วไป"),
                   const Spacer(),
                   Text("${data['normal_price'] ?? 0}฿")
                 ],
               ),
               Row(
                 children: [
-                  const Text("Member"),
+                  const Text("สมาชิก"),
                   const Spacer(),
                   Text("${data['member_price'] ?? 0}฿")
                 ],
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CardContainerdashboard extends StatelessWidget {
+  final Map<String, dynamic> data;
+
+  const CardContainerdashboard({
+    required this.data,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+      },
+      child: Container(
+        height: 230,
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colorconstants.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.grey, // สีของเงา
+              offset: Offset(2, 2), // ตำแหน่งเงา (x, y)
+              blurRadius: 5, // รัศมีของเงา
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              SizedBox(
+                width: 110, // กำหนดความกว้างของ Container
+                height: 110, // กำหนดความสูงของ Container
+                child: data['image'] != null
+                    ? Image.network(
+                        data['image'], // ตำแหน่งไฟล์รูปภาพ
+                        fit: BoxFit
+                            .cover, // การปรับขนาดรูปภาพให้พอดีกับขนาดของ Container
+                      )
+                    : Image.asset(
+                        'assets/images/logoblue.png', // ตำแหน่งไฟล์รูปภาพ
+                        fit: BoxFit
+                            .cover, // การปรับขนาดรูปภาพให้พอดีกับขนาดของ Container
+                      ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Text(
+                      data['name'],
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colorconstants.blacktext37465A,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                ],
+              ),
+              const SizedBox(height: 5),
+              Container(
+                height: 20,
+                decoration: BoxDecoration(
+                  color: Colorconstants.green009F3A,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
+                  child: Row(
+                    children: [
+                      const Text(
+                        "ขายได้",
+                        style: TextStyle(
+                          color: Colorconstants.white,
+                          fontSize: 10,
+                        ),
+                      ),
+                      const Spacer(),
+                      Text(
+                        "${data['sell'] ?? 0} ชิ้น",
+                        style: const TextStyle(
+                          color: Colorconstants.white,
+                          fontSize: 10,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // const SizedBox(height: 5),
+              // Row(
+              //   children: [
+              //     const Text("Price"),
+              //     const Spacer(),
+              //     Text("${data['normal_price'] ?? 0}฿")
+              //   ],
+              // ),
+              // Row(
+              //   children: [
+              //     const Text("Member"),
+              //     const Spacer(),
+              //     Text("${data['member_price'] ?? 0}฿")
+              //   ],
+              // ),
             ],
           ),
         ),
