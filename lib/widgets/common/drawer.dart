@@ -37,8 +37,7 @@ class DrawerWidget extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-          
+          ),        
           ListTile(
             leading: const Icon(Icons.home),
             title: const Text('Home', style: TextStyle(fontSize: 18)),
@@ -53,7 +52,7 @@ class DrawerWidget extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.add_shopping_cart),
-            title: const Text('Pos', style: TextStyle(fontSize: 18)),
+            title: const Text('Point of Sale', style: TextStyle(fontSize: 18)),
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -61,6 +60,13 @@ class DrawerWidget extends StatelessWidget {
                   builder: (context) => const PosScreen(),
                 ),
               );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.add_business_outlined),
+            title: const Text('Neary of Stock', style: TextStyle(fontSize: 18)),
+            onTap: () {
+              Navigator.pushNamed(context, '/nos');
             },
           ),
           ListTile(

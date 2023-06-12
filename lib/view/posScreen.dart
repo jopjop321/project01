@@ -26,6 +26,7 @@ class _PosScreenState extends State<PosScreen> {
             name: data['name'],
             price: data['normal_price'],
             amount: data['amount'],
+            sell: data['sell'],
           ),
         );
       }
@@ -74,18 +75,20 @@ class _PosScreenState extends State<PosScreen> {
       for (var i = 0; i < _products.length; i++) {
         await db.collection('products').doc(_products[i].code).update({
           'amount': _products[i].amount - _products[i].quantity,
+          'sell': _products[i].sell + _products[i].quantity,
         });
 
         if (_products[i].quantity >= 1) {
           String nameProduct = _products[i].name;
           int amountProduct = _products[i].amount - _products[i].quantity;
-          if (amountProduct <= 10) {
-            _showNotifincation(index++, "สินค้ากำลังจะหมด",
-                " $nameProduct เหลือแค่ $amountProduct ชิ้น");
-          } else if (amountProduct == 0) {
+          if (amountProduct == 0) {
             _showNotifincation(index++, "สินค้าหมดแล้ว",
                 " $nameProduct อย่าลืมสั่งสินค้าเพิ่มด้วย");
           }
+         else if (amountProduct <= 10) {
+          _showNotifincation(index++, "สินค้ากำลังจะหมด",
+              " $nameProduct เหลือแค่ $amountProduct ชิ้น");
+         }
         }
       }
 
@@ -227,6 +230,7 @@ class Product {
   final String name;
   final double price;
   final int amount;
+  final int sell;
   int quantity;
 
   Product({
@@ -236,6 +240,7 @@ class Product {
     required this.code,
     required this.costPrice,
     required this.amount,
+    required this.sell,
   });
 }
 

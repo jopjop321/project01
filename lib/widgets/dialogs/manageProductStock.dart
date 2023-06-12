@@ -3,8 +3,9 @@ import 'package:jstock/utils/parser.dart';
 
 class ManageProductStockDialog extends StatefulWidget {
   Map<String, dynamic> data;
+  final bool? typesell;
 
-  ManageProductStockDialog({super.key, required this.data});
+  ManageProductStockDialog({super.key, required this.data, this.typesell});
 
   @override
   State<ManageProductStockDialog> createState() =>
@@ -14,7 +15,7 @@ class ManageProductStockDialog extends StatefulWidget {
 class _ManageProductStockDialogState extends State<ManageProductStockDialog> {
   TextEditingController _stockController = TextEditingController();
   int _currentStock = 0;
-  int _addcurrentStock = 0 ;
+  int _addcurrentStock = 0;
 
   @override
   void initState() {
@@ -43,7 +44,7 @@ class _ManageProductStockDialogState extends State<ManageProductStockDialog> {
     try {
       final db = FirebaseFirestore.instance;
       await db.collection('products').doc(widget.data['code']).update({
-        'amount': _currentStock+_addcurrentStock,
+        'amount': _currentStock + _addcurrentStock,
       });
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -57,13 +58,18 @@ class _ManageProductStockDialogState extends State<ManageProductStockDialog> {
         ),
         backgroundColor: Colors.green[400],
       ));
+      if (widget.typesell == false) {
+        Navigator.pushNamed((context), '/nos');
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ProductScreen(),
+          ),
+        );
+      }
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const ProductScreen(),
-        ),
-      );
+      // Navigator.pop(context);
     } on Error catch (e) {
       print(e);
     }

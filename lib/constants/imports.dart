@@ -46,3 +46,6 @@ export 'package:jstock/widgets/common/appbar.dart';
 export 'package:jstock/widgets/common/fromproduct.dart';
 export 'package:jstock/widgets/common/customcard.dart';
 export 'package:jstock/widgets/common/customAlertDialog.dart';
+export 'package:jstock/widgets/common/cardcontainerdashboard.dart';
+
+export 'package:jstock/widgets/dialogs/manageProductStock.dart';

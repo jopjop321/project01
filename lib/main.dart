@@ -1,5 +1,6 @@
 import 'package:jstock/constants/imports.dart';
 import 'package:jstock/firebase_options.dart';
+import 'package:jstock/view/nearyofstockScreen.dart';
 import 'package:jstock/view/posScreen.dart';
 
 
@@ -53,6 +54,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         routes: {
           '/pos': (context) => PosScreen(),
+          '/nos': (context) => NearyofstockScreen(),
         },
       ),
     );

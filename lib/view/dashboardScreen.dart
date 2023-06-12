@@ -1,4 +1,5 @@
 import 'package:jstock/constants/imports.dart';
+import 'package:jstock/widgets/common/cardcontainerdashboard.dart';
 
 // import 'package:qrscan/qrscan.dart' as scanner ;
 
@@ -13,7 +14,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final NavigationDrawerState state = NavigationDrawerState();
   bool isDrawerOpen = false;
   String? scanresult;
-  
+
+  List<Map<String, dynamic>>? listdata = [];
 
   void toggleDrawer() {
     setState(
@@ -23,7 +25,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  Future<Map<String, dynamic>> _fetchData1() async {
+    final db = FirebaseFirestore.instance;
+    final products = await db.collection('products').get();
 
+    if (listdata!.isEmpty) {
+      for (var product in products.docs) {
+        Map<String, dynamic> _datalist = {
+          'name': product['name'],
+          'sell': product['sell'],
+          'image': product['image']
+        };
+        // print(_datalist['name']);
+        listdata!.add(_datalist);
+        // print(listdata);
+      }
+    }
+
+    // print(listdata);
+    listdata!.sort(((a, b) => b['sell'].compareTo(a['sell'])));
+    // print(listdata);
+
+    return {'data1': listdata![0], 'data2': listdata![1]};
+  }
 
   Future<Map<String, double>> _fetchData() async {
     final db = FirebaseFirestore.instance;
@@ -157,13 +181,41 @@ class _DashboardScreenState extends State<DashboardScreen> {
               height: 20,
             ),
             const Text(
-              'สินค้าขายดี',
+              'Best Seller',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Colorconstants.texttitledashboard,
               ),
             ),
+            const SizedBox(
+              height: 20,
+            ),
+            FutureBuilder<Map<String, dynamic>>(
+                future: _fetchData1(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return GridView(
+                    padding: EdgeInsets.zero,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: 153 / 185,
+                    ),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: [
+                      CardContainerdashboard(data: snapshot.data!['data1']),
+                      CardContainerdashboard(data: snapshot.data!['data2']),
+                    ],
+                  );
+                }),
             const SizedBox(
               height: 20,
             ),

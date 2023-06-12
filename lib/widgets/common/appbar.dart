@@ -23,7 +23,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/pos');
+            Navigator.pushNamed(context, '/nos');
           },
           child: Row(
             children: [
