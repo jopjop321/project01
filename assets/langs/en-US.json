@@ -1,0 +1,88 @@
+{
+    "dashboardscreen": {
+        "total_income": "Total Income",
+        "monthly_income": "Monthly Income",
+        "total_profit": "Total profit",
+        "total_selling": "Total Selling",
+        "baht": "Baht",
+        "item": "Item",
+        "best_seller": "Best Seller",
+        "latest_history": "Latest History",
+        "word_history": {
+            "name": "Name",
+            "unit": "Unit",
+            "amount": "Amount"
+        }
+    },
+    "darwer": {
+        "menu": "Menu",
+        "welcome": "Welcome",
+        "home": "Home",
+        "pos": "Point of Sale",
+        "nos": "Neary of Stock",
+        "product": "Product",
+        "add_product": "Add Product",
+        "logout": "Logout",
+        "select_lnguage": "Select Language"
+    },
+    "cardcontainerdashboard": {
+        "total_amount": "total amount :",
+        "amount": "amount :"
+    },
+    "cardcontainerd": {
+        "remaining": "Remaining",
+        "price": "Price",
+        "member": "Member"
+    },
+    "add_product": {
+        "add_product": "Add Product",
+        "product_name": "Product Name",
+        "product_code": "Product Code",
+        "description": "Description",
+        "image": "image",
+        "cost_price": "Cost Price",
+        "normal_price": "Normal Price",
+        "member_price": "Member Price",
+        "amount": "Amount"
+    },
+    "edit_product" : {
+        "edit_product": "Edit Product",
+        "product_name": "Product Name",
+        "product_code": "Product Code",
+        "description": "Description",
+        "image": "image",
+        "cost_price": "Cost Price",
+        "normal_price": "Normal Price",
+        "member_price": "Member Price",
+        "amount": "Amount",
+        "seve" : "Save"
+    },
+    "product": {
+        "product": "Product",
+        "search_for_products": "Search for product"
+    },
+    "view": {
+        "sell": "Sell",
+        "add": "Add",
+        "edit": "Edit",
+        "delete": "Delete",
+        "action" : "Action"
+    },
+    "sell": {
+        "sell_product": "Sell Product",
+        "membership": "Membership",
+        "yes": "Yes",
+        "no": "No",
+        "total": "Total"
+    },
+    "add_stock" : {
+        "add_stock" : "Add Stock"
+    },
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "amount": "Amount",
+    "neary_of_stock" : "Neary Of Stock",
+    "total_price" : "Total Price",
+    "list" : "List"
+    
+}

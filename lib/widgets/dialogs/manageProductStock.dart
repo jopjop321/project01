@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:jstock/constants/imports.dart';
 import 'package:jstock/utils/parser.dart';
 
@@ -93,14 +94,14 @@ class _ManageProductStockDialogState extends State<ManageProductStockDialog> {
           children: [
             Row(
               children: [
-                const Text(
-                  'Add Stock',
+                Text(
+                  'add_stock.add_stock',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Colorconstants.blue195DD1,
                   ),
-                ),
+                ).tr(),
                 const Spacer(),
                 SizedBox(
                   width: 80,
@@ -122,12 +123,12 @@ class _ManageProductStockDialogState extends State<ManageProductStockDialog> {
                     ),
                     onPressed: () => Navigator.pop(context),
                     child: const Text(
-                      "Cancel",
+                      "cancel",
                       style: TextStyle(
                         fontSize: 12,
                         color: Colorconstants.gray,
                       ),
-                    ),
+                    ).tr(),
                   ),
                 )
               ],
@@ -179,17 +180,17 @@ class _ManageProductStockDialogState extends State<ManageProductStockDialog> {
               ),
             ),
             const SizedBox(height: 30),
-            const SizedBox(
+             SizedBox(
               width: double.infinity,
               child: Text(
-                'Amount',
+                'amount',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: Colors.grey,
                 ),
-              ),
+              ).tr(),
             ),
             const SizedBox(height: 10),
             Row(
@@ -252,13 +253,13 @@ class _ManageProductStockDialogState extends State<ManageProductStockDialog> {
                 ),
                 onPressed: _saveProduct,
                 child: const Text(
-                  "Confirm",
+                  "confirm",
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                   ),
-                ),
+                ).tr(),
               ),
             ),
           ],

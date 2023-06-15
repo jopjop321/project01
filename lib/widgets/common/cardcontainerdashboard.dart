@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:jstock/constants/imports.dart';
 
 class CardContainerdashboard extends StatelessWidget {
@@ -87,12 +88,12 @@ class CardContainerdashboard extends StatelessWidget {
                   child: Row(
                     children: [
                       Text(
-                        word!.isEmpty ? "total amount :" : word!,
+                        word!.isEmpty ? "cardcontainerdashboard.total_amount" : "cardcontainerdashboard.amount",
                         style: TextStyle(
                           color: Colorconstants.white,
                           fontSize: 10,
                         ),
-                      ),
+                      ).tr(),
                       const Spacer(),
                       Text(
                         typesell!

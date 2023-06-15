@@ -1,5 +1,7 @@
 import 'package:jstock/constants/imports.dart';
 import 'package:jstock/widgets/common/cardcontainerdashboard.dart';
+import 'package:easy_localization/easy_localization.dart';
+
 
 // import 'package:qrscan/qrscan.dart' as scanner ;
 
@@ -151,26 +153,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     children: [
                       CustomContainer(
                         color: Colorconstants.green009F3A,
-                        title: "Total Income",
-                        titleunit: "Baht",
+                        title: "dashboardscreen.total_income",
+                        titleunit: "dashboardscreen.baht".tr(),
                         unit: snapshot.data!['totalIncome'],
                       ),
                       CustomContainer(
                         color: Colorconstants.blue195DD1,
-                        title: "Monthly Income",
-                        titleunit: "Baht",
+                        title: "dashboardscreen.monthly_income",
+                        titleunit: "dashboardscreen.baht".tr(),
                         unit: snapshot.data!['monthlyIncome'],
                       ),
                       CustomContainer(
                         color: Colorconstants.orangeFA7A1E,
-                        title: "Total profit",
-                        titleunit: "Baht",
+                        title: "dashboardscreen.total_profit",
+                        titleunit: "dashboardscreen.baht".tr(),
                         unit: snapshot.data!['totalProfit'],
                       ),
                       CustomContainer(
                         color: Colorconstants.redE73134,
-                        title: "Total Selling",
-                        titleunit: "Item",
+                        title: "dashboardscreen.total_selling",
+                        titleunit: "dashboardscreen.item".tr(),
                         unit: snapshot.data!['totalSelling'],
                         intUnit: true,
                       ),
@@ -181,13 +183,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
               height: 20,
             ),
             const Text(
-              'Best Seller',
+              'dashboardscreen.best_seller',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Colorconstants.texttitledashboard,
               ),
-            ),
+            ).tr(),
             const SizedBox(
               height: 20,
             ),
@@ -220,13 +222,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
               height: 20,
             ),
             const Text(
-              'Latest History',
+              'dashboardscreen.latest_history', 
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Colorconstants.texttitledashboard,
               ),
-            ),
+            ).tr(),
             const SizedBox(
               height: 20,
             ),
@@ -250,10 +252,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             topRight: Radius.circular(20),
                           ),
                         ),
-                        child: const TextTable(
-                          text1: "Name",
-                          text2: "Unit",
-                          text3: "Amount",
+                        child: TextTable(
+                          text1: "dashboardscreen.word_history.name".tr(),
+                          text2: "dashboardscreen.word_history.unit".tr(),
+                          text3: "dashboardscreen.word_history.amount".tr(),
                         ),
                       ),
                       Container(

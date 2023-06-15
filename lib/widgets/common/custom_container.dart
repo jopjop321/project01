@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:jstock/constants/colors.dart';
 import 'package:intl/intl.dart';
@@ -39,7 +40,7 @@ class CustomContainer extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   color: Colorconstants.white,
                 ),
-              ),
+              ).tr(),
               const SizedBox(height: 5),
               Text(
                 "($titleunit)",
@@ -48,7 +49,7 @@ class CustomContainer extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   color: Colorconstants.white,
                 ),
-              ),
+              ).tr(),
               const Spacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:jstock/constants/imports.dart';
 
 class ConfirmDialog extends StatelessWidget {
@@ -22,18 +23,18 @@ class ConfirmDialog extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: const Text('Cancel'),
+          child: const Text('cancel').tr(),
         ),
         TextButton(
           onPressed: () {
             if (onConfirm != null) onConfirm!();
           },
           child: const Text(
-            'Confirm',
+            'confirm',
             style: TextStyle(
               color: Colors.red,
             ),
-          ),
+          ).tr(),
         ),
       ],
     );

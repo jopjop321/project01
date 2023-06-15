@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:jstock/constants/imports.dart';
 import 'package:form_field_validator/form_field_validator.dart';
@@ -121,13 +122,13 @@ class _NearyofstockScreenState extends State<NearyofstockScreen> {
                 Row(
                   children: [
                     const Text(
-                      'Neary Of Stock',
+                      'neary_of_stock',
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
                         color: Colorconstants.texttitledashboard,
                       ),
-                    ),
+                    ).tr(),
                     const Spacer(),
                     // ElevatedButton(
                     //   style: ElevatedButton.styleFrom(
@@ -202,7 +203,6 @@ class _NearyofstockScreenState extends State<NearyofstockScreen> {
                           // if (displayedProducts[index].data()['amount'] <10 ) {
                           return CardContainerdashboard(
                             typesell: false,
-                            word: "amount :",
                             data: displayedProducts[index].data(),
                           );
                           // }

@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:jstock/constants/imports.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:jstock/widgets/dialogs/addProduct.dart';
+import 'package:http/http.dart' as http;
 
 class ProductScreen extends StatefulWidget {
   final bool addProduct;
@@ -55,6 +57,16 @@ class _ProductScreenState extends State<ProductScreen> {
     return snapshot.docs;
   }
 
+//   Future<void> fetchData() async {
+//   final response = await http.get(Uri.parse('http://localhost:8080/products'));
+//   if (response.statusCode == 200) {
+//     final data = response.body;
+//   } else {
+//     print('Failed to fetch data');
+//   }
+//   return data;
+// }
+
   List<Widget> _buildProducts(
       List<QueryDocumentSnapshot<Map<String, dynamic>>> data) {
     List<Widget> list = [];
@@ -80,9 +92,10 @@ class _ProductScreenState extends State<ProductScreen> {
       }).toList();
     });
   }
-
+ 
   @override
   Widget build(BuildContext context) {
+    //  String searchtext = 'product.search_for_products'.tr();
     return Scaffold(
       appBar: AppBarWidget(),
       body: SafeArea(
@@ -94,41 +107,49 @@ class _ProductScreenState extends State<ProductScreen> {
                 Row(
                   children: [
                     const Text(
-                      'Product',
+                      'product.product',
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
                         color: Colorconstants.texttitledashboard,
                       ),
-                    ),
+                    ).tr(),
                     const Spacer(),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colorconstants.blue195DD1,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                    Container(
+                      width: 160,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colorconstants.blue195DD1,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return const AddProductDialog();
+                            },
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Expanded(
+                                flex: 1, child: Icon(Icons.add_circle_outline)),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Expanded(
+                                flex: 5,
+                                child: Center(
+                                  child: Text(
+                                    "add_product.add_product",
+                                  ).tr(),
+                                ))
+                          ],
                         ),
                       ),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return const AddProductDialog();
-                          },
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          Icon(Icons.add_circle_outline),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            "Add Product",
-                          ),
-                        ],
-                      ),
-                    ),
+                    )
                   ],
                 ),
                 // const SizedBox(
@@ -137,7 +158,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 TextField(
                   controller: _searchController,
                   decoration: const InputDecoration(
-                    hintText: 'Search for products',
+                    hintText: "Search for product",
                   ),
                   onChanged: _performSearch,
                 ),
@@ -166,7 +187,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           crossAxisCount: 2,
                           crossAxisSpacing: 10,
                           mainAxisSpacing: 10,
-                          childAspectRatio: 153 / 230,
+                          childAspectRatio: 153 / 235,
                         ),
                         itemCount: displayedProducts.length,
                         shrinkWrap: true,

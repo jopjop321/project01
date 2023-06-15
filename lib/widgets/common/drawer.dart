@@ -1,7 +1,35 @@
 import 'package:jstock/constants/imports.dart';
 import 'package:jstock/view/posScreen.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-class DrawerWidget extends StatelessWidget {
+class DrawerWidget extends StatefulWidget {
+  const DrawerWidget({super.key});
+
+  @override
+  State<DrawerWidget> createState() => _DrawerWidgetState();
+}
+
+List languageCode = ["en", "th"];
+List countryCode = ["US", "TH"];
+
+class _DrawerWidgetState extends State<DrawerWidget> {
+  Widget _buildLanguageOption(
+      String languageName, String langCode, String countryCode) {
+    return InkWell(
+      onTap: () {
+        EasyLocalization.of(context)!.setLocale(Locale(langCode, countryCode));
+        Navigator.pop(context);
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Text(
+          languageName,
+          style: TextStyle(fontSize: 18),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -19,28 +47,28 @@ class DrawerWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.end,
-              children: const [
+              children: [
                 Text(
-                  'Menu',
+                  'darwer.menu',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,
                   ),
-                ),
+                ).tr(),
                 SizedBox(height: 8),
                 Text(
-                  'Welcome,',
+                  'darwer.welcome',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                   ),
-                ),
+                ).tr(),
               ],
             ),
-          ),        
+          ),
           ListTile(
             leading: const Icon(Icons.home),
-            title: const Text('Home', style: TextStyle(fontSize: 18)),
+            title: Text('darwer.home', style: TextStyle(fontSize: 18)).tr(),
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -52,7 +80,7 @@ class DrawerWidget extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.add_shopping_cart),
-            title: const Text('Point of Sale', style: TextStyle(fontSize: 18)),
+            title: const Text('darwer.pos', style: TextStyle(fontSize: 18)).tr(),
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -64,14 +92,14 @@ class DrawerWidget extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.add_business_outlined),
-            title: const Text('Neary of Stock', style: TextStyle(fontSize: 18)),
+            title: const Text('darwer.nos', style: TextStyle(fontSize: 18)).tr(),
             onTap: () {
               Navigator.pushNamed(context, '/nos');
             },
           ),
           ListTile(
             leading: const Icon(Icons.trolley),
-            title: const Text('Product', style: TextStyle(fontSize: 18)),
+            title: const Text('darwer.product', style: TextStyle(fontSize: 18)).tr(),
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -83,7 +111,8 @@ class DrawerWidget extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.add_sharp),
-            title: const Text('Add Product', style: TextStyle(fontSize: 18)),
+            title: const Text('darwer.add_product',
+                style: TextStyle(fontSize: 18)).tr(),
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -100,7 +129,7 @@ class DrawerWidget extends StatelessWidget {
           const Divider(color: Colors.grey),
           ListTile(
             leading: const Icon(Icons.logout),
-            title: const Text('Logout', style: TextStyle(fontSize: 18)),
+            title: const Text('darwer.logout', style: TextStyle(fontSize: 18)).tr(),
             onTap: () async {
               try {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -122,6 +151,28 @@ class DrawerWidget extends StatelessWidget {
                   gravity: ToastGravity.CENTER,
                 );
               }
+            },
+          ),
+          // Spacer(),
+          ListTile(
+            // leading: const Icon(Icons.add_sharp),
+            title: const Text('TH/EN', style: TextStyle(fontSize: 18)),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('darwer.select_lnguage').tr(),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildLanguageOption('English', 'en', 'US'),
+                        _buildLanguageOption('ภาษาไทย', 'th', 'TH'),
+                      ],
+                    ),
+                  );
+                },
+              );
             },
           ),
         ],

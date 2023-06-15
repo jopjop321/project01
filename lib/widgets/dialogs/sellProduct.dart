@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:jstock/constants/imports.dart';
 import 'package:jstock/main.dart';
 import 'package:jstock/utils/parser.dart';
@@ -122,13 +123,13 @@ class _SellProductDialogState extends State<SellProductDialog> {
             Row(
               children: [
                 const Text(
-                  'Sell Product',
+                  'sell.sell_product',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Colorconstants.blue195DD1,
                   ),
-                ),
+                ).tr(),
                 const Spacer(),
                 SizedBox(
                   width: 80,
@@ -150,12 +151,12 @@ class _SellProductDialogState extends State<SellProductDialog> {
                     ),
                     onPressed: () => Navigator.pop(context),
                     child: const Text(
-                      "Cancel",
+                      "cancel",
                       style: TextStyle(
                         fontSize: 12,
                         color: Colorconstants.gray,
                       ),
-                    ),
+                    ).tr(),
                   ),
                 )
               ],
@@ -207,17 +208,17 @@ class _SellProductDialogState extends State<SellProductDialog> {
               ),
             ),
             const SizedBox(height: 30),
-            const SizedBox(
+            SizedBox(
               width: double.infinity,
               child: Text(
-                'Amount',
+                'amount',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: Colors.grey,
                 ),
-              ),
+              ).tr(),
             ),
             const SizedBox(height: 10),
             Row(
@@ -272,17 +273,17 @@ class _SellProductDialogState extends State<SellProductDialog> {
               ],
             ),
             const SizedBox(height: 20),
-            const SizedBox(
+             SizedBox(
               width: double.infinity,
               child: Text(
-                'Membership',
+                'sell.membership',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: Colors.grey,
                 ),
-              ),
+              ).tr(),
             ),
             const SizedBox(height: 10),
             Row(
@@ -316,12 +317,12 @@ class _SellProductDialogState extends State<SellProductDialog> {
                                   : Colors.grey[300],
                             ),
                             child: Text(
-                              'Yes',
+                              'sell.yes',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: _isMember ? Colors.white : Colors.grey,
                               ),
-                            ),
+                            ).tr(),
                           ),
                         ),
                       ),
@@ -344,12 +345,12 @@ class _SellProductDialogState extends State<SellProductDialog> {
                                   : Colors.grey[300],
                             ),
                             child: Text(
-                              'No',
+                              'sell.no',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: !_isMember ? Colors.white : Colors.grey,
                               ),
-                            ),
+                            ).tr(),
                           ),
                         ),
                       ),
@@ -359,17 +360,17 @@ class _SellProductDialogState extends State<SellProductDialog> {
               ],
             ),
             const SizedBox(height: 20),
-            const SizedBox(
+            SizedBox(
               width: double.infinity,
               child: Text(
-                'Total',
+                'sell.total',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: Colors.grey,
                 ),
-              ),
+              ).tr(),
             ),
             const SizedBox(height: 10),
             SizedBox(
@@ -393,13 +394,13 @@ class _SellProductDialogState extends State<SellProductDialog> {
                 ),
                 onPressed: _sellProduct,
                 child: const Text(
-                  "Confirm",
+                  "confirm",
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                   ),
-                ),
+                ).tr(),
               ),
             ),
           ],

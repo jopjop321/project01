@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jstock/constants/firebase.dart';
@@ -119,13 +120,13 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 Row(
                   children: [
                     const Text(
-                      'Add Product',
+                      'add_product.add_product',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Colorconstants.blue195DD1,
                       ),
-                    ),
+                    ).tr(),
                     const Spacer(),
                     SizedBox(
                       width: 80,
@@ -147,12 +148,12 @@ class _AddProductDialogState extends State<AddProductDialog> {
                         ),
                         onPressed: () => Navigator.pop(context),
                         child: const Text(
-                          "Cancel",
+                          "cancel",
                           style: TextStyle(
                             fontSize: 12,
                             color: Colorconstants.gray,
                           ),
-                        ),
+                        ).tr(),
                       ),
                     )
                   ],
@@ -163,15 +164,15 @@ class _AddProductDialogState extends State<AddProductDialog> {
                   child: Column(
                     children: [
                       FormProduct(
-                        text: "Product Name",
+                        text: "add_product.product_name".tr(),
                         controller: _nameController,
                       ),
                       FormProduct(
-                        text: "Product Code",
+                        text: "add_product.product_code".tr(),
                         controller: _codeController,
                       ),
                       FormProduct(
-                        text: "Description",
+                        text: "add_product.product_code".tr(),
                         maxLines: 5,
                         controller: _descController,
                       ),
@@ -181,12 +182,12 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 const SizedBox(height: 10),
                 Row(children: [
                   const Text(
-                    'Image',
+                    'add_product.image',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 14,
                     ),
-                  ),
+                  ).tr(),
                   const SizedBox(width: 20),
                   SizedBox(
                     height: 30,
@@ -206,7 +207,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                             size: 15,
                           ),
                           SizedBox(width: 4),
-                          Text('Upload', style: TextStyle(color: Colors.white)),
+                          Text('Upload', style: TextStyle(color: Colors.white) ,overflow: TextOverflow.ellipsis),
                         ],
                       ),
                     ),
@@ -249,22 +250,22 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 ],
                 const SizedBox(height: 20),
                 FormProduct(
-                  text: "Cost Price",
+                  text: "add_product.cost_price".tr(),
                   inputType: TextInputType.number,
                   controller: _costPriceController,
                 ),
                 FormProduct(
-                  text: "Normal Price",
+                  text: "add_product.normal_price".tr(),
                   inputType: TextInputType.number,
                   controller: _normalPriceController,
                 ),
                 FormProduct(
-                  text: "Member Price",
+                  text: "add_product.member_price".tr(),
                   inputType: TextInputType.number,
                   controller: _memberPriceController,
                 ),
                 FormProduct(
-                  text: "Amount",
+                  text: "add_product.amount".tr(),
                   inputType: TextInputType.number,
                   controller: _amountController,
                 ),

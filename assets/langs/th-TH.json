@@ -1,0 +1,87 @@
+{
+    "dashboardscreen": {
+        "total_income": "รายได้",
+        "monthly_income": "รายได้(ต่อเดือน)",
+        "total_profit": "กำไร",
+        "total_selling": "จำนวนสินค้าขาย",
+        "baht": "บาท",
+        "item": "ชิ้น",
+        "best_seller": "สินค้าขายดี",
+        "latest_history": "สินค้าขายล่าสุด",
+        "word_history": {
+            "name": "ชื่อ",
+            "unit": "จำนวนชิ้น",
+            "amount": "ราคารวม"
+        }
+    },
+    "darwer":{
+        "menu" : "เมนู",
+        "welcome" : "ยินดีต้อนรับ",
+        "home" : "หน้าแรก",
+        "pos" : "ขายสินค้า",
+        "nos" : "สินค้าที่ใกล้จะหมด",
+        "product" : "สินค้า",
+        "add_product" : "เพิ่มสินค้า",
+        "logout" : "ออกจากระบบ",
+        "select_lnguage" : "เลือกภาษา"
+    },
+    "cardcontainerdashboard" :{
+        "total_amount" : "ขายได้ :",
+        "amount" : "เหลือ :"
+    },
+    "cardcontainerd" : {
+        "remaining" : "ที่เหลืออยู่",
+        "price" : "ทั่วไป",
+        "member" : "สมาชิก"
+    },
+    "add_product":{
+        "add_product" : "เพิ่มสินค้า",
+        "product_name" : "ชื่อสินค้า",
+        "product_code" : "รหัสสินค้า",
+        "description" : "รายละเอียด",
+        "image" : "รูปภาพ",
+        "cost_price" : "ราคาต้นทุน",
+        "normal_price": "ราคาทั่วไป",
+        "member_price": "ราคาสมาชิก",
+        "amount" : "จำนวน"
+    },
+    "edit_product" : {
+        "edit_product" : "แก้ไขสินค้า",
+        "product_name" : "ชื่อสินค้า",
+        "product_code" : "รหัสสินค้า",
+        "description" : "รายละเอียด",
+        "image" : "รูปภาพ",
+        "cost_price" : "ราคาต้นทุน",
+        "normal_price": "ราคาทั่วไป",
+        "member_price": "ราคาสมาชิก",
+        "amount" : "จำนวน",
+        "seve" : "บันทึก"
+    },
+    "product" : {
+        "product" : "สินค้า",
+        "search_for_products" : "ค้นหาสินค้า"
+    },
+    "view" :{
+        "sell" : "ขาย",
+        "add" : "เพิ่ม",
+        "edit" : "แก้ไข",
+        "delete" : "ลบ",
+        "action" : "เพิ่มเติม"
+    },
+    "sell" : {
+        "sell_product" : "ขายสินค้า",
+        "membership" : "เป็นสมาชิก",
+        "yes" : "ใช่",
+        "no" : "ไม่ใช่",
+        "total" : "ราคารวม"
+      },
+      "add_stock" : {
+        "add_stock" : "เพิ่มสินค้า"
+    },
+    "confirm" : "ยืนยัน",
+    "cancel" : "ยกเลิก",
+    "amount" : "จำนวน",
+    "neary_of_stock" : "สินค้าที่ใกล้จะหมด",
+    "total_price" : "ราคารวม",
+    "list" : "รายการ"
+}

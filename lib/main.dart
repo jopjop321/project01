@@ -2,13 +2,14 @@ import 'package:jstock/constants/imports.dart';
 import 'package:jstock/firebase_options.dart';
 import 'package:jstock/view/nearyofstockScreen.dart';
 import 'package:jstock/view/posScreen.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
 
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -21,15 +22,16 @@ Future<void> main() async {
       InitializationSettings(android: initializationSettingsAndroid);
 
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
-  runApp(MyApp());
-
-  // (MultiProvider(
-  //     providers: [
-  //       // ChangeNotifierProvider(create: (_) => CounterModel()),
-  //       // Provider(create: (_) => OtherModel()),
-  //     ],
-  //     child: MyApp(),),);
+  runApp(
+    EasyLocalization(
+      supportedLocales: [Locale('en' , 'US'), Locale('th' , 'TH')],
+      path: 'assets/langs',
+      fallbackLocale: Locale('en', 'US'),
+      saveLocale: true,
+      child: MyApp(),
+    ),
+  );
+  // runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -47,6 +49,9 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Jstock',
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
         // theme: ThemeData(
         //   primarySwatch: Colors.blue,
         // ),

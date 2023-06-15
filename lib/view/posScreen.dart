@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:jstock/constants/imports.dart';
 import 'package:jstock/main.dart';
@@ -132,7 +133,7 @@ class _PosScreenState extends State<PosScreen> {
                 return ListTile(
                   title: Text(_products[index].name),
                   subtitle: Text(
-                      '฿${_products[index].price.toStringAsFixed(2)}\n amount: ${_products[index].amount} '),
+                      '฿${_products[index].price.toStringAsFixed(2)}\n${'amount'.tr()}: ${_products[index].amount} '),
                   trailing: QuantitySelector(
                     // quantity: _products[index].quantity,
                     onChanged: (value) {
@@ -174,7 +175,7 @@ class _PosScreenState extends State<PosScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('List'),
+          title: Text('list').tr(),
           content: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -197,7 +198,7 @@ class _PosScreenState extends State<PosScreen> {
                     ),
 
                 const SizedBox(height: 16),
-                Text('Total Price: ${totalAmount.toStringAsFixed(2)}฿'),
+                Text('${'total_price'.tr()}: ${totalAmount.toStringAsFixed(2)}฿'),
                 Image.asset(
                   'assets/images/qrcode.png',
                   fit: BoxFit.contain,
@@ -211,11 +212,11 @@ class _PosScreenState extends State<PosScreen> {
                 // ดำเนินการที่ต้องการเมื่อกดปุ่มปิดใบเสร็จ
                 Navigator.pop(context);
               },
-              child: const Text('Close'),
+              child: const Text('close').tr(),
             ),
             TextButton(
               onPressed: _submit,
-              child: const Text('Confirm'),
+              child: const Text('confirm').tr(),
             ),
           ],
         );

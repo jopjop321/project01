@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:jstock/constants/firebase.dart';
 import 'package:jstock/constants/imports.dart';
@@ -16,8 +17,7 @@ class ViewProductDialog extends StatefulWidget {
 }
 
 class _ViewProductDialogState extends State<ViewProductDialog> {
-  List<String> options = ['Sell', 'Add', 'Edit', 'Delete'];
-
+  List<String> options = ['view.sell'.tr(), 'view.add'.tr(), 'view.edit'.tr(), 'view.delete'.tr()];
   Future<void> _deleteProduct() async {
     try {
       final db = FirebaseFirestore.instance;
@@ -36,7 +36,6 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
 
   void _onAction(String? action) {
     BuildContext widgetContext = context;
-
     switch (action) {
       case 'Edit':
         showDialog(
@@ -78,6 +77,53 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
         );
         break;
       case 'Add':
+        showDialog(
+          context: context,
+          builder: (context) {
+            return ManageProductStockDialog(data: widget.data);
+          },
+        );
+        break;
+        case 'แก้ไข':
+        showDialog(
+          context: context,
+          builder: (context) {
+            return EditProductDialog(data: widget.data);
+          },
+        );
+        break;
+      case 'ลบ':
+        showDialog(
+          context: context,
+          builder: (context) {
+            return ConfirmDialog(
+              title: 'ยืนยันจะลบสินค้า',
+              description:
+                  'คุณแน่ใจหรือไม่ว่าต้องการลบสินค้า "${widget.data['code']}"?',
+              onConfirm: () async {
+                await _deleteProduct();
+
+                // ignore: use_build_context_synchronously
+                Navigator.pushReplacement(
+                  widgetContext,
+                  MaterialPageRoute(
+                    builder: (context) => const ProductScreen(),
+                  ),
+                );
+              },
+            );
+          },
+        );
+        break;
+      case 'ขาย':
+        showDialog(
+          context: context,
+          builder: (context) {
+            return SellProductDialog(data: widget.data);
+          },
+        );
+        break;
+      case 'เพิ่ม':
         showDialog(
           context: context,
           builder: (context) {
@@ -133,15 +179,15 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                       borderRadius: BorderRadius.circular(8.0),
-                      hint: const Padding(
+                      hint:  Padding(
                         padding: EdgeInsets.only(left: 10, right: 10),
                         child: Text(
-                          'Action',
+                          'view.action',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
-                        ),
+                        ).tr(),
                       ),
                       items: options.map((String option) {
                         return DropdownMenuItem<String>(
@@ -149,7 +195,7 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
                           child: Text(
                             option,
                             style: TextStyle(
-                              color: option == 'Delete'
+                              color: option == 'view.delete'.tr()
                                   ? Colors.red
                                   : Colors.black,
                             ),
@@ -211,21 +257,21 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
             const SizedBox(height: 20),
             Row(
               children: [
-                const Text("Cost"),
+                const Text("add_product.cost_price").tr(),
                 const Spacer(),
                 Text("${widget.data['cost_price'] ?? 0}฿")
               ],
             ),
             Row(
               children: [
-                const Text("Price"),
+                const Text("add_product.normal_price").tr(),
                 const Spacer(),
                 Text("${widget.data['normal_price'] ?? 0}฿")
               ],
             ),
             Row(
               children: [
-                const Text("Member"),
+                const Text("add_product.member_price").tr(),
                 const Spacer(),
                 Text("${widget.data['member_price'] ?? 0}฿")
               ],

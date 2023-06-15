@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:jstock/constants/colors.dart';
 import 'package:jstock/widgets/dialogs/viewProduct.dart';
@@ -88,12 +89,12 @@ class CardContainer extends StatelessWidget {
                   child: Row(
                     children: [
                       const Text(
-                        "Remaining",
+                        "cardcontainerd.remaining",
                         style: TextStyle(
                           color: Colorconstants.white,
                           fontSize: 10,
                         ),
-                      ),
+                      ).tr(),
                       const Spacer(),
                       Text(
                         "${data['amount'] ?? 0}",
@@ -109,14 +110,14 @@ class CardContainer extends StatelessWidget {
               const SizedBox(height: 5),
               Row(
                 children: [
-                  const Text("Price"),
+                  const Text("cardcontainerd.price").tr(),
                   const Spacer(),
                   Text("${data['normal_price'] ?? 0}฿")
                 ],
               ),
               Row(
                 children: [
-                  const Text("Member"),
+                  const Text("cardcontainerd.member").tr(),
                   const Spacer(),
                   Text("${data['member_price'] ?? 0}฿")
                 ],
