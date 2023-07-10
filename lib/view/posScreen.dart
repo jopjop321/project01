@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:jstock/constants/imports.dart';
 import 'package:jstock/main.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class PosScreen extends StatefulWidget {
   const PosScreen({super.key});
@@ -14,26 +16,30 @@ class _PosScreenState extends State<PosScreen> {
   final List<Product> _products = [];
 
   Future<List<Product>> _listProducts() async {
-    final db = FirebaseFirestore.instance;
-    final snapshot = await db.collection('products').get();
-
-    if (_products.isEmpty) {
-      for (var product in snapshot.docs) {
-        Map<String, dynamic> data = product.data();
-        _products.add(
-          Product(
-            code: data['code'],
-            costPrice: data['cost_price'],
-            name: data['name'],
-            price: data['normal_price'],
-            amount: data['amount'],
-            sell: data['sell'],
-          ),
-        );
+    final response =
+        await http.get(Uri.parse('http://192.168.1.77:8080/products'));
+    if (response.statusCode == 200) {
+      final data2 = json.decode(response.body);
+      if (_products.isEmpty) {
+        for (var product in data2) {
+          Product datalist = Product(
+            code: product['code'],
+            costPrice: product['cost_price'],
+            name: product['name'],
+            price: product['normal_price'],
+            amount: product['amount'],
+            sell: product['sell'],
+          );
+          _products.add(datalist);
+        }
       }
+      // setState(() {
+      // });
+      // print(_products);
+      return _products;
+    } else {
+      throw Exception('Failed to fetch products');
     }
-
-    return _products;
   }
 
   Future<void> _showNotifincation(int index, String title, String body) async {
@@ -55,41 +61,49 @@ class _PosScreenState extends State<PosScreen> {
     int index = 1;
     try {
       final db = FirebaseFirestore.instance;
+      var url = Uri.parse('http://192.168.1.77:8080/products/sell');
+      // List<Map<String, dynamic>> data =
+      //     _products.where((e) => e.quantity > 0).map((product) {
+      //   return {
+      //     'amount': product.quantity,
+      //     'buy_price': product.price,
+      //     'code': product.code,
+      //     'cost_price': product.costPrice,
+      //     'date': Timestamp.now(),
+      //     'isMember': false,
+      //     'name': product.name,
+      //     'total_price': product.quantity * product.price,
+      //   };
+      // }).toList();
 
-      List<Map<String, dynamic>> data =
-          _products.where((e) => e.quantity > 0).map((product) {
-        return {
-          'amount': product.quantity,
-          'buy_price': product.price,
-          'code': product.code,
-          'cost_price': product.costPrice,
-          'date': Timestamp.now(),
-          'isMember': false,
-          'name': product.name,
-          'total_price': product.quantity * product.price,
-        };
-      }).toList();
-
-      for (var item in data) {
-        await db.collection('sells').add(item);
-      }
+      // for (var item in data) {
+      //   await db.collection('sells').add(item);
+      // }
       for (var i = 0; i < _products.length; i++) {
-        await db.collection('products').doc(_products[i].code).update({
-          'amount': _products[i].amount - _products[i].quantity,
-          'sell': _products[i].sell + _products[i].quantity,
-        });
-
+        // await db.collection('products').doc(_products[i].code).update({
+        //   'amount': _products[i].amount - _products[i].quantity,
+        //   'sell': _products[i].sell + _products[i].quantity,
+        // });
+        Map<String, dynamic> data = {
+          'code': _products[i].code,
+          'name': _products[i].name,
+          'cost_price': _products[i].costPrice,
+          'buy_price': _products[i].price,
+          'sell': _products[i].quantity,
+          'amount': _products[i].amount,
+          'ismember': false,
+        };
+        var response = await http.put(url, body: json.encode(data));
         if (_products[i].quantity >= 1) {
           String nameProduct = _products[i].name;
           int amountProduct = _products[i].amount - _products[i].quantity;
           if (amountProduct == 0) {
             _showNotifincation(index++, "สินค้าหมดแล้ว",
                 " $nameProduct อย่าลืมสั่งสินค้าเพิ่มด้วย");
+          } else if (amountProduct <= 10) {
+            _showNotifincation(index++, "สินค้ากำลังจะหมด",
+                " $nameProduct เหลือแค่ $amountProduct ชิ้น");
           }
-         else if (amountProduct <= 10) {
-          _showNotifincation(index++, "สินค้ากำลังจะหมด",
-              " $nameProduct เหลือแค่ $amountProduct ชิ้น");
-         }
         }
       }
 
@@ -117,38 +131,67 @@ class _PosScreenState extends State<PosScreen> {
   }
 
   double totalAmount = 0.0;
+  List<dynamic> _searchResults = [];
+  TextEditingController _searchController = TextEditingController();
+  void _performSearch(String value) async {
+    List<dynamic> products = await _listProducts();
+    setState(() {
+      _searchResults = products.where((product) {
+        final productName = product['name'].toString().toLowerCase();
+        return productName.contains(value.toLowerCase());
+      }).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    String searchKeyword = ''; // ตัวแปรสำหรับเก็บคำค้นหา
+
     return Scaffold(
       appBar: AppBarWidget(),
       drawer: DrawerWidget(),
-      body: FutureBuilder<List<Product>>(
-        future: _listProducts(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: _products.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(_products[index].name),
-                  subtitle: Text(
-                      '฿${_products[index].price.toStringAsFixed(2)}\n${'amount'.tr()}: ${_products[index].amount} '),
-                  trailing: QuantitySelector(
-                    // quantity: _products[index].quantity,
-                    onChanged: (value) {
-                      setState(() {
-                        _products[index].quantity = value;
-                        calculateTotalAmount();
-                      });
+      body: Column(
+        children: [
+          // TextField(
+          //   controller: _searchController,
+          //   decoration: const InputDecoration(
+          //     hintText: "Search for product",
+          //   ),
+          //   onChanged: _performSearch,
+          // ),
+          Expanded(
+            child: FutureBuilder<List<Product>>(
+              future: _listProducts(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  // กรองรายการสินค้าตามคำค้นหา
+                  List<dynamic> products = snapshot.data!;
+                  List<dynamic> displayedProducts =
+                      _searchResults.isNotEmpty ? _searchResults : products;
+                  return ListView.builder(
+                    itemCount: displayedProducts.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(displayedProducts[index].name),
+                        subtitle: Text(
+                            '฿${displayedProducts[index].price.toStringAsFixed(2)}\n${'amount'.tr()}: ${displayedProducts[index].amount} '),
+                        trailing: QuantitySelector(
+                          onChanged: (value) {
+                            setState(() {
+                              displayedProducts[index].quantity = value;
+                              calculateTotalAmount();
+                            });
+                          },
+                        ),
+                      );
                     },
-                  ),
-                );
+                  );
+                }
+                return const Center(child: CircularProgressIndicator());
               },
-            );
-          }
-          return const Center(child: CircularProgressIndicator());
-        },
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -181,7 +224,6 @@ class _PosScreenState extends State<PosScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                // const Text('Items:'),
                 for (var product in _products)
                   if (product.quantity > 0)
                     Row(
@@ -198,11 +240,14 @@ class _PosScreenState extends State<PosScreen> {
                     ),
 
                 const SizedBox(height: 16),
-                Text('${'total_price'.tr()}: ${totalAmount.toStringAsFixed(2)}฿'),
-                Image.asset(
-                  'assets/images/qrcode.png',
-                  fit: BoxFit.contain,
-                ),
+                Text(
+                    '${'total_price'.tr()}: ${totalAmount.toStringAsFixed(2)}฿'),
+                Image.network(
+                    'https://promptpay.io/0633134308/${totalAmount.toStringAsFixed(2)}'),
+                // Image.asset(
+                //   'assets/images/qrcode.png',
+                //   fit: BoxFit.contain,
+                // ),
               ],
             ),
           ),
@@ -212,7 +257,7 @@ class _PosScreenState extends State<PosScreen> {
                 // ดำเนินการที่ต้องการเมื่อกดปุ่มปิดใบเสร็จ
                 Navigator.pop(context);
               },
-              child: const Text('close').tr(),
+              child: const Text('cancel').tr(),
             ),
             TextButton(
               onPressed: _submit,
@@ -227,9 +272,9 @@ class _PosScreenState extends State<PosScreen> {
 
 class Product {
   final String code;
-  final double costPrice;
+  final int costPrice;
   final String name;
-  final double price;
+  final int price;
   final int amount;
   final int sell;
   int quantity;

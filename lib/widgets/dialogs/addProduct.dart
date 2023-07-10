@@ -8,6 +8,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jstock/constants/firebase.dart';
 import 'package:jstock/constants/imports.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class AddProductDialog extends StatefulWidget {
   const AddProductDialog({super.key});
@@ -33,15 +35,16 @@ class _AddProductDialogState extends State<AddProductDialog> {
   Future<void> _saveProduct() async {
     if (_formKey.currentState!.validate()) {
       try {
+        var url = Uri.parse('http://192.168.1.77:8080/products');
         final db = FirebaseFirestore.instance;
 
         Map<String, dynamic> data = {
           'name': _nameController.text,
           'code': _codeController.text,
-          'desc': _descController.text,
-          'cost_price': double.parse(_costPriceController.text),
-          'normal_price': double.parse(_normalPriceController.text),
-          'member_price': double.parse(_memberPriceController.text),
+          'description': _descController.text,
+          'cost_price': int.parse(_costPriceController.text),
+          'normal_price': int.parse(_normalPriceController.text),
+          'member_price': int.parse(_memberPriceController.text),
           'amount': int.parse(_amountController.text),
         };
 
@@ -57,26 +60,32 @@ class _AddProductDialogState extends State<AddProductDialog> {
           data['image'] = downloadUrl;
         }
 
-        await db.collection('products').doc(_codeController.text).set(data);
+        var response = await http.post(url, body: json.encode(data));
 
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: const Text(
-            'Created Product Successfully',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
+        if (response.statusCode == 200) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: const Text(
+              'Created Product Successfully',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
             ),
-          ),
-          backgroundColor: Colors.green[400],
-        ));
+            backgroundColor: Colors.green[400],
+          ));
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const ProductScreen(),
-          ),
-        );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ProductScreen(),
+            ),
+          );
+          print('POST request successful');
+          print('Response body: ${response.body}');
+        } else {
+          print('POST request failed with status: ${response.statusCode}');
+        }
       } on Error catch (e) {
         print(e);
       }
@@ -172,7 +181,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                         controller: _codeController,
                       ),
                       FormProduct(
-                        text: "add_product.product_code".tr(),
+                        text: "add_product.description".tr(),
                         maxLines: 5,
                         controller: _descController,
                       ),
@@ -207,7 +216,9 @@ class _AddProductDialogState extends State<AddProductDialog> {
                             size: 15,
                           ),
                           SizedBox(width: 4),
-                          Text('Upload', style: TextStyle(color: Colors.white) ,overflow: TextOverflow.ellipsis),
+                          Text('Upload',
+                              style: TextStyle(color: Colors.white),
+                              overflow: TextOverflow.ellipsis),
                         ],
                       ),
                     ),

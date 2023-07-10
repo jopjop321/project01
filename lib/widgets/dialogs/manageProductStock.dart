@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:jstock/constants/imports.dart';
 import 'package:jstock/utils/parser.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ManageProductStockDialog extends StatefulWidget {
   Map<String, dynamic> data;
@@ -43,31 +45,44 @@ class _ManageProductStockDialogState extends State<ManageProductStockDialog> {
 
   Future<void> _saveProduct() async {
     try {
-      final db = FirebaseFirestore.instance;
-      await db.collection('products').doc(widget.data['code']).update({
-        'amount': _currentStock + _addcurrentStock,
-      });
+      final String apiUrl = 'http://192.168.1.77:8080/addstock';
+      Map<String, dynamic> data = {
+        'code': widget.data['code'],
+        'amount': _currentStock + _addcurrentStock
+      };
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text(
-          'Updated Stock Successfully',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 12,
+      final response = await http.put(
+        Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(data),
+      );
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text(
+            'Updated Stock Successfully',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
           ),
-        ),
-        backgroundColor: Colors.green[400],
-      ));
-      if (widget.typesell == false) {
-        Navigator.pushNamed((context), '/nos');
+          backgroundColor: Colors.green[400],
+        ));
+        if (widget.typesell == false) {
+          Navigator.pushNamed((context), '/nos');
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ProductScreen(),
+            ),
+          );
+        }
+        print('Data updated successfully');
       } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const ProductScreen(),
-          ),
-        );
+        // ไม่สามารถอัปเดตข้อมูลได้
+        print('Failed to update data. Error: ${response.reasonPhrase}');
       }
 
       // Navigator.pop(context);
@@ -180,7 +195,7 @@ class _ManageProductStockDialogState extends State<ManageProductStockDialog> {
               ),
             ),
             const SizedBox(height: 30),
-             SizedBox(
+            SizedBox(
               width: double.infinity,
               child: Text(
                 'amount',

@@ -8,6 +8,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jstock/constants/imports.dart';
 import 'package:jstock/utils/parser.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class EditProductDialog extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -38,7 +40,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _nameController.text = widget.data['name'];
       _codeController.text = widget.data['code'];
-      _descController.text = widget.data['desc'];
+      _descController.text = widget.data['description'];
       _costPriceController.text = (widget.data['cost_price'] ?? 0).toString();
       _normalPriceController.text =
           (widget.data['normal_price'] ?? 0).toString();
@@ -51,15 +53,16 @@ class _EditProductDialogState extends State<EditProductDialog> {
   Future<void> _saveProduct() async {
     if (_formKey.currentState!.validate()) {
       try {
+        var url = Uri.parse('http://192.168.1.77:8080/products');
         final db = FirebaseFirestore.instance;
 
         Map<String, dynamic> data = {
           'name': _nameController.text,
           'code': _codeController.text,
-          'desc': _descController.text,
-          'cost_price': Parser.toDouble(_costPriceController.text),
-          'normal_price': Parser.toDouble(_normalPriceController.text),
-          'member_price': Parser.toDouble(_memberPriceController.text),
+          'description': _descController.text,
+          'cost_price': Parser.toInt(_costPriceController.text),
+          'normal_price': Parser.toInt(_normalPriceController.text),
+          'member_price': Parser.toInt(_memberPriceController.text),
           'amount': Parser.toInt(_amountController.text),
           'image': widget.data['image'],
         };
@@ -75,27 +78,33 @@ class _EditProductDialogState extends State<EditProductDialog> {
           data['image'] = downloadUrl;
         }
 
-        await db.collection('products').doc(_codeController.text).set(data);
+        var response = await http.put(url, body: json.encode(data));
 
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: const Text(
-            'Updated Product Successfully',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
+        if (response.statusCode == 200) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: const Text(
+              'Updated Product Successfully',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
             ),
-          ),
-          backgroundColor: Colors.green[400],
-        ));
+            backgroundColor: Colors.green[400],
+          ));
 
-        // ignore: use_build_context_synchronously
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const ProductScreen(),
-          ),
-        );
+          // ignore: use_build_context_synchronously
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ProductScreen(),
+            ),
+          );
+          print('put request successful');
+          print('Response body: ${response.body}');
+        } else {
+          print('put request failed with status: ${response.statusCode}');
+        }
       } on Error catch (e) {
         print(e);
       }

@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:jstock/constants/imports.dart';
 import 'package:jstock/main.dart';
 import 'package:jstock/utils/parser.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class SellProductDialog extends StatefulWidget {
   Map<String, dynamic> data;
@@ -50,25 +52,24 @@ class _SellProductDialogState extends State<SellProductDialog> {
     if (_currentAmount >= 1 && _currentAmount <= widget.data['amount']) {
       try {
         final db = FirebaseFirestore.instance;
-        await db.collection('products').doc(widget.data['code']).update({
-          'amount': widget.data['amount'] - _currentAmount,
-        });
+        var url = Uri.parse('http://192.168.1.77:8080/products/sell');
 
-        double price = _isMember
+        int price = _isMember
             ? widget.data['member_price']
             : widget.data['normal_price'];
 
-        await db.collection('sells').add({
+        Map<String, dynamic> data = {
           'code': widget.data['code'],
           'name': widget.data['name'],
           'cost_price': widget.data['cost_price'],
           'buy_price': price,
-          'amount': _currentAmount,
-          'total_price': price * _currentAmount,
-          'isMember': _isMember,
-          'date': Timestamp.now(),
-        });
+          'sell': _currentAmount,
+          'amount': widget.data['amount'],
+          'ismember': _isMember,
+        };
 
+        var response = await http.put(url, body: json.encode(data));
+        if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: const Text(
             'Sell Product Successfully',
@@ -98,6 +99,10 @@ class _SellProductDialogState extends State<SellProductDialog> {
             builder: (context) => const ProductScreen(),
           ),
         );
+        }
+        else {
+          print('POST request failed with status: ${response.statusCode}');
+        }
       } on Error catch (e) {
         print(e);
       }

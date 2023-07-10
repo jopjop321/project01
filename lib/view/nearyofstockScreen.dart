@@ -3,7 +3,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:jstock/constants/imports.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:jstock/widgets/dialogs/addProduct.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 class NearyofstockScreen extends StatefulWidget {
   final bool addProduct;
 
@@ -75,13 +76,26 @@ class _NearyofstockScreenState extends State<NearyofstockScreen> {
     return {'data1': listdata![0], 'data2': listdata![1]};
   }
 
-  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+   Future<List<dynamic>>
       _listProducts() async {
-    final db = FirebaseFirestore.instance;
-    final snapshot =
-        await db.collection('products').where('amount', isLessThan: 10).get();
-    return snapshot.docs;
+    final response =
+        await http.get(Uri.parse('http://192.168.1.77:8080/products/nos'));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body) as List<dynamic>;
+      // final data1 = response.body;
+      // print("\n : ${data[1]['code']}");
+      return data;
+    } else {
+      throw Exception('Failed to fetch products');
+    }
   }
+  // Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+  //     _listProducts() async {
+  //   final db = FirebaseFirestore.instance;
+  //   final snapshot =
+  //       await db.collection('products').where('amount', isLessThan: 10).get();
+  //   return snapshot.docs;
+  // }
 
   List<Widget> _buildProducts(
       List<QueryDocumentSnapshot<Map<String, dynamic>>> data) {
@@ -98,16 +112,16 @@ class _NearyofstockScreenState extends State<NearyofstockScreen> {
     return list;
   }
 
-  void _performSearch(String value) async {
-    List<QueryDocumentSnapshot<Map<String, dynamic>>> products =
-        await _listProducts();
-    setState(() {
-      _searchResults = products.where((product) {
-        final productName = product.data()['amount'];
-        return productName.contains(value);
-      }).toList();
-    });
-  }
+  // void _performSearch(String value) async {
+  //   List<QueryDocumentSnapshot<Map<String, dynamic>>> products =
+  //       await _listProducts();
+  //   setState(() {
+  //     _searchResults = products.where((product) {
+  //       final productName = product.data()['amount'];
+  //       return productName.contains(value);
+  //     }).toList();
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +187,7 @@ class _NearyofstockScreenState extends State<NearyofstockScreen> {
                   height: 20,
                 ),
                 FutureBuilder<
-                    List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
+                    List<dynamic>>(
                   future: _listProducts(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -181,9 +195,9 @@ class _NearyofstockScreenState extends State<NearyofstockScreen> {
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else {
-                      List<QueryDocumentSnapshot<Map<String, dynamic>>>
+                      List<dynamic>
                           products = snapshot.data!;
-                      List<QueryDocumentSnapshot<Map<String, dynamic>>>
+                      List<dynamic>
                           displayedProducts = products;
                       return GridView.builder(
                         padding: EdgeInsets.zero,
@@ -203,7 +217,7 @@ class _NearyofstockScreenState extends State<NearyofstockScreen> {
                           // if (displayedProducts[index].data()['amount'] <10 ) {
                           return CardContainerdashboard(
                             typesell: false,
-                            data: displayedProducts[index].data(),
+                            data: displayedProducts[index],
                           );
                           // }
                         },

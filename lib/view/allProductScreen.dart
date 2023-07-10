@@ -4,6 +4,7 @@ import 'package:jstock/constants/imports.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:jstock/widgets/dialogs/addProduct.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ProductScreen extends StatefulWidget {
   final bool addProduct;
@@ -25,7 +26,7 @@ class _ProductScreenState extends State<ProductScreen> {
   String? scanresult;
   TextEditingController _searchController = TextEditingController();
   ScrollController _scrollController = ScrollController();
-  List<QueryDocumentSnapshot<Map<String, dynamic>>> _searchResults = [];
+  List<dynamic> _searchResults = [];
 
   void toggleDrawer() {
     setState(
@@ -50,11 +51,29 @@ class _ProductScreenState extends State<ProductScreen> {
     });
   }
 
-  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+  Future<List<dynamic>>
       _listProducts() async {
-    final db = FirebaseFirestore.instance;
-    final snapshot = await db.collection('products').get();
-    return snapshot.docs;
+    final response =
+        await http.get(Uri.parse('http://192.168.1.77:8080/products'));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body) as List<dynamic>;
+      // final data1 = response.body;
+      // print("\n : ${data[1]['code']}");
+      return data;
+    } else {
+      throw Exception('Failed to fetch products');
+    }
+  }
+
+  Future<List<dynamic>> _getProducts() async {
+    final response =
+        await http.get(Uri.parse('http://localhost:8080/products'));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body) as List<dynamic>;
+      return data;
+    } else {
+      throw Exception('Failed to fetch products');
+    }
   }
 
 //   Future<void> fetchData() async {
@@ -83,16 +102,16 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   void _performSearch(String value) async {
-    List<QueryDocumentSnapshot<Map<String, dynamic>>> products =
+    List<dynamic> products =
         await _listProducts();
     setState(() {
       _searchResults = products.where((product) {
-        final productName = product.data()['name'].toString().toLowerCase();
+        final productName = product['name'].toString().toLowerCase();
         return productName.contains(value.toLowerCase());
       }).toList();
     });
   }
- 
+
   @override
   Widget build(BuildContext context) {
     //  String searchtext = 'product.search_for_products'.tr();
@@ -166,7 +185,7 @@ class _ProductScreenState extends State<ProductScreen> {
                   height: 20,
                 ),
                 FutureBuilder<
-                    List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
+                    List<dynamic>>(
                   future: _listProducts(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -174,9 +193,9 @@ class _ProductScreenState extends State<ProductScreen> {
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else {
-                      List<QueryDocumentSnapshot<Map<String, dynamic>>>
+                      List<dynamic>
                           products = snapshot.data!;
-                      List<QueryDocumentSnapshot<Map<String, dynamic>>>
+                      List<dynamic>
                           displayedProducts =
                           _searchResults.isNotEmpty ? _searchResults : products;
                       return GridView.builder(
@@ -194,7 +213,7 @@ class _ProductScreenState extends State<ProductScreen> {
                         scrollDirection: Axis.vertical,
                         itemBuilder: (context, index) {
                           return CardContainer(
-                            data: displayedProducts[index].data(),
+                            data: displayedProducts[index],
                           );
                         },
                       );

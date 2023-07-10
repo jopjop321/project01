@@ -1,7 +1,8 @@
 import 'package:jstock/constants/imports.dart';
 import 'package:jstock/widgets/common/cardcontainerdashboard.dart';
 import 'package:easy_localization/easy_localization.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 // import 'package:qrscan/qrscan.dart' as scanner ;
 
@@ -28,11 +29,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Future<Map<String, dynamic>> _fetchData1() async {
-    final db = FirebaseFirestore.instance;
-    final products = await db.collection('products').get();
-
+    // final db = FirebaseFirestore.instance;
+    // final products = await db.collection('products').get();
+    final response =
+        await http.get(Uri.parse('http://192.168.1.77:8080/products'));
     if (listdata!.isEmpty) {
-      for (var product in products.docs) {
+      for (var product in json.decode(response.body)) {
         Map<String, dynamic> _datalist = {
           'name': product['name'],
           'sell': product['sell'],
@@ -53,29 +55,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<Map<String, double>> _fetchData() async {
     final db = FirebaseFirestore.instance;
-    final sells = await db.collection('sells').get();
+    final response =
+        await http.get(Uri.parse('http://192.168.1.77:8080/sells'));
+    final sells = json.decode(response.body) as List<dynamic>;
+    // DateTime now = DateTime.now();
+    // DateTime currentMonth = DateTime(now.year, now.month, 1);
+    // DateTime endOfCurrentMonth = DateTime(now.year, now.month + 1, 0);
 
-    DateTime now = DateTime.now();
-    DateTime currentMonth = DateTime(now.year, now.month, 1);
-    DateTime endOfCurrentMonth = DateTime(now.year, now.month + 1, 0);
-
-    final monthlySells = await db
-        .collection('sells')
-        .where(
-          'date',
-          isGreaterThanOrEqualTo: currentMonth,
-          isLessThanOrEqualTo: endOfCurrentMonth,
-        )
-        .get();
+    // final monthlySells = await db
+    //     .collection('sells')
+    //     .where(
+    //       'date',
+    //       isGreaterThanOrEqualTo: currentMonth,
+    //       isLessThanOrEqualTo: endOfCurrentMonth,
+    //     )
+    //     .get();
 
     double totalIncome = 0;
     double totalProfit = 0;
     double totalSelling = 0;
     double monthlyIncome = 0;
 
-    for (var sell in sells.docs) {
-      double costPrice = sell['cost_price'];
-      double buyPrice = sell['buy_price'];
+    for (var sell in sells) {
+      int costPrice = sell['cost_price'];
+      int buyPrice = sell['buy_price'];
       int amount = sell['amount'];
 
       totalIncome += buyPrice * amount;
@@ -83,8 +86,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       totalSelling += amount;
     }
 
-    for (var sell in monthlySells.docs) {
-      double buyPrice = sell['buy_price'];
+    for (var sell in sells) {
+      int buyPrice = sell['buy_price'];
       int amount = sell['amount'];
 
       monthlyIncome += buyPrice * amount;
@@ -98,18 +101,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     };
   }
 
-  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+  Future<List<dynamic>>
       _fetchLatestSells() async {
-    final db = FirebaseFirestore.instance;
-    final sells = await db
-        .collection('sells')
-        .orderBy(
-          'date',
-          descending: true,
-        )
-        .get();
+    final response =
+        await http.get(Uri.parse('http://192.168.1.77:8080/sells'));
+    final sells = json.decode(response.body) as List<dynamic>;
 
-    return sells.docs;
+    return sells;
   }
 
   @override
@@ -222,7 +220,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               height: 20,
             ),
             const Text(
-              'dashboardscreen.latest_history', 
+              'dashboardscreen.latest_history',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -232,7 +230,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const SizedBox(
               height: 20,
             ),
-            FutureBuilder<List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
+            FutureBuilder<List<dynamic>>(
                 future: _fetchLatestSells(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {

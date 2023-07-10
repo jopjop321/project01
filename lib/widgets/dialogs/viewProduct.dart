@@ -6,6 +6,8 @@ import 'package:jstock/widgets/dialogs/confirm.dart';
 import 'package:jstock/widgets/dialogs/editProduct.dart';
 import 'package:jstock/widgets/dialogs/manageProductStock.dart';
 import 'package:jstock/widgets/dialogs/sellProduct.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ViewProductDialog extends StatefulWidget {
   Map<String, dynamic> data;
@@ -17,18 +19,31 @@ class ViewProductDialog extends StatefulWidget {
 }
 
 class _ViewProductDialogState extends State<ViewProductDialog> {
-  List<String> options = ['view.sell'.tr(), 'view.add'.tr(), 'view.edit'.tr(), 'view.delete'.tr()];
+  List<String> options = [
+    'view.sell'.tr(),
+    'view.add'.tr(),
+    'view.edit'.tr(),
+    'view.delete'.tr()
+  ];
   Future<void> _deleteProduct() async {
     try {
-      final db = FirebaseFirestore.instance;
-      await db.collection('products').doc(widget.data['code']).delete();
+      // final db = FirebaseFirestore.instance;
+      // await db.collection('products').doc(widget.data['code']).delete();
 
-      if (widget.data['image'] != null) {
+      final response =
+          await http.delete(Uri.parse('http://192.168.1.77:8080/products/${widget.data['code']}'));
+      if (response.statusCode == 200) {
+        if (widget.data['image'] != null) {
         final storage = FirebaseStorage.instance.ref();
         final image = storage
             .child('${FirebaseConfig.storageImagePath}/${widget.data['code']}');
         await image.delete();
       }
+        print('ลบข้อมูลสำเร็จ');
+      } else {
+        print('เกิดข้อผิดพลาดในการลบข้อมูล: ${response.statusCode}');
+      }
+      
     } on Error catch (e) {
       print(e);
     }
@@ -84,7 +99,7 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
           },
         );
         break;
-        case 'แก้ไข':
+      case 'แก้ไข':
         showDialog(
           context: context,
           builder: (context) {
@@ -179,7 +194,7 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                       borderRadius: BorderRadius.circular(8.0),
-                      hint:  Padding(
+                      hint: Padding(
                         padding: EdgeInsets.only(left: 10, right: 10),
                         child: Text(
                           'view.action',
@@ -231,7 +246,7 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
             ),
             const SizedBox(height: 10),
             Text(
-              widget.data['desc'] ?? '',
+              widget.data['description'] ?? '',
               style: const TextStyle(
                 color: Colorconstants.graytext75,
               ),
