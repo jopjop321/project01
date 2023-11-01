@@ -279,7 +279,7 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
             ),
             Row(
               children: [
-                const Text("add_product.normal_price").tr(),
+                const Text("add_product.price").tr(),
                 const Spacer(),
                 Text("${widget.data['normal_price'] ?? 0}฿")
               ],

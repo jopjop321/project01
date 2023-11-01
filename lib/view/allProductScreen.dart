@@ -67,7 +67,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
   Future<List<dynamic>> _getProducts() async {
     final response =
-        await http.get(Uri.parse('http://localhost:8080/products'));
+        await http.get(Uri.parse('http://192.168.1.77:8080/products'));
     if (response.statusCode == 200) {
       final data = json.decode(response.body) as List<dynamic>;
       return data;

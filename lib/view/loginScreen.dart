@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:jstock/constants/imports.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -46,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'LOGIN',
+                            'login.loginb'.tr(),
                             style: TextStyle(
                               fontSize: 30,
                               fontWeight: FontWeight.bold,
@@ -57,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Row(
                             children: [
                               Text(
-                                'Username',
+                                'login.username'.tr(),
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.normal,
@@ -84,13 +86,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           Row(
                             children: [
                               Text(
-                                'Password',
+                                'login.password'.tr(),
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.normal,
                                   color: Colorconstants.graytext75,
                                 ),
-                              ),
+                              )
                             ],
                           ),
                           TextFormField(
@@ -129,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             // padding: EdgeInsets.all(32),
                             child: ElevatedButton(
                               child: Text(
-                                "Login",
+                                'login.login'.tr(),
                               ),
                               style: ElevatedButton.styleFrom(
                                   minimumSize: Size(360, 60)),
@@ -137,27 +139,63 @@ class _LoginScreenState extends State<LoginScreen> {
                                 if (formKey.currentState!.validate()) {
                                   formKey.currentState!.save();
                                   try {
-                                    await FirebaseAuth.instance
-                                        .signInWithEmailAndPassword(
-                                            email: profile.email!,
-                                            password: profile.password!);
-
+                                    // await FirebaseAuth.instance
+                                    //     .signInWithEmailAndPassword(
+                                    //         email: profile.email!,
+                                    //         password: profile.password!);
+                                    var url = Uri.parse(
+                                        'http://192.168.1.77:8080/login');
+                                    Map<String, dynamic> data = {
+                                      'id': profile.email,
+                                      'password': profile.password,
+                                    };
+                                    var response = await http.post(url,
+                                        body: json.encode(data));
                                     print(
                                         "email:${profile.email} password:${profile.password}");
-                                    SharedPreferences prefs =
-                                        await SharedPreferences.getInstance();
-                                    await prefs.setBool('isLoggedIn', true);
-                                    formKey.currentState!.reset();
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => DashboardScreen(),
-                                      ),
-                                    );
-                                  } on FirebaseAuthException catch (e) {
+                                    if (response.statusCode == 200) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                        content: const Text(
+                                          'login Successfully',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                        backgroundColor: Colors.green[400],
+                                      ));
+                                      final data2 = jsonDecode(response.body);
+                                      SharedPreferences prefs =
+                                          await SharedPreferences.getInstance();
+                                      await prefs.setBool('isLoggedIn', true);
+                                      print(data2['employeeid']);
+                                      await prefs.setInt(
+                                          'employeeid', data2['employeeid']);
+                                      await prefs.setString(
+                                          'position', data2['position']);
+                                      await prefs.setString(
+                                          'nickname', data2['nickname']);
+                                      formKey.currentState!.reset();
+                                      print(data2);
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              DashboardScreen(),
+                                        ),
+                                      );
+                                      print('POST request successful');
+                                      print('Response body: ${response.body}');
+                                    } else {
+                                      print(
+                                          'POST request failed with status: ${response.statusCode}');
+                                    }
+                                  } on Error catch (e) {
                                     // print(e.message);
                                     Fluttertoast.showToast(
-                                        msg: e.message!,
+                                        msg: "เข้าสู่ระบบไม่สำเร็จ",
                                         gravity: ToastGravity.CENTER);
                                   }
                                 }
@@ -165,6 +203,35 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           SizedBox(height: 30),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SignUpScreen(),
+                                ),
+                              );
+                            },
+                            child: RichText(
+                                text: TextSpan(
+                                    text: 'login.not_amember'.tr(),
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colorconstants.graytext75,
+                                    ),
+                                    children: <TextSpan>[
+                                  TextSpan(
+                                    text: 'login.signup'.tr(),
+                                    style: TextStyle(
+                                      decoration: TextDecoration.underline,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colorconstants.graytext75,
+                                    ),
+                                  )
+                                ])),
+                          )
                         ],
                       ),
                     ),

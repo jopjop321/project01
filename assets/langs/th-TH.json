@@ -14,6 +14,24 @@
             "amount": "ราคารวม"
         }
     },
+    "login":{
+        "loginb":"เข้าสู่ระบบ",
+        "username":"ชื่อผู้ใช้",
+        "password":"รหัสผ่าน",
+        "login":"เข้าสู่ระบบ",
+        "not_amember": "ยังไม่มีบัญชีผู้ใช้? ",
+        "signup": "สมัครสมาชิก"
+       
+    },
+    "signup":{
+        "signup":"สมัครสมาชิก",
+        "name":"ชื่อ",
+        "lastname":"นามสกุล",
+        "nickname":"ชื่อเล่น",
+        "username":"ชื่อผู้ใช้",
+        "password":"รหัสผ่าน",
+        "confirmpassword":"ยืนยันรหัสผ่าน"
+    },
     "darwer":{
         "menu" : "เมนู",
         "welcome" : "ยินดีต้อนรับ",
@@ -23,7 +41,8 @@
         "product" : "สินค้า",
         "add_product" : "เพิ่มสินค้า",
         "logout" : "ออกจากระบบ",
-        "select_lnguage" : "เลือกภาษา"
+        "select_lnguage" : "เลือกภาษา",
+        "profile": "โปรไฟล์"
     },
     "cardcontainerdashboard" :{
         "total_amount" : "ขายได้ :",

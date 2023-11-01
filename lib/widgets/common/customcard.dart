@@ -112,7 +112,7 @@ class CardContainer extends StatelessWidget {
                 children: [
                   const Text("cardcontainerd.price").tr(),
                   const Spacer(),
-                  Text("${data['normal_price'] ?? 0}฿")
+                  Text("${data['price'] ?? 0}฿")
                 ],
               ),
               Row(

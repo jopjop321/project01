@@ -30,6 +30,7 @@ export 'package:jstock/widgets/common/custom_container.dart';
 //model
 export 'package:jstock/model/profile.dart';
 export 'package:jstock/model/total.dart';
+export 'package:jstock/model/signup.dart';
 
 //view
 export 'package:jstock/view/allProductScreen.dart';
@@ -39,6 +40,7 @@ export 'package:jstock/view/logoScreen.dart';
 export 'package:jstock/view/logoScreen.dart';
 export 'package:jstock/view/qrcodeScreen.dart';
 export 'package:jstock/view/cartScreen.dart';
+export 'package:jstock/view/signupScreen.dart';
 
 //widgets
 export 'package:jstock/widgets/common/drawer.dart';

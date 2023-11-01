@@ -29,7 +29,14 @@ class _DrawerWidgetState extends State<DrawerWidget> {
       ),
     );
   }
-
+  
+  Future<String> readData(String key) async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString(key)!;
+  }
+  
+  
+  
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -63,6 +70,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     fontSize: 16,
                   ),
                 ).tr(),
+                SizedBox(height: 8),
               ],
             ),
           ),
@@ -127,6 +135,18 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             },
           ),
           const Divider(color: Colors.grey),
+          ListTile(
+            leading: const Icon(Icons.account_circle_outlined),
+            title: const Text('darwer.profile', style: TextStyle(fontSize: 18)).tr(),
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProductScreen(),
+                ),
+              );
+            },
+          ),
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('darwer.logout', style: TextStyle(fontSize: 18)).tr(),
