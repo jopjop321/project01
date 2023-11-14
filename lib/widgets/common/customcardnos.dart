@@ -1,25 +1,22 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:jstock/constants/colors.dart';
-import 'package:jstock/widgets/dialogs/viewProduct.dart';
+import 'package:jstock/constants/imports.dart';
 
-class CardContainer extends StatelessWidget {
+class CardContainerNos extends StatelessWidget {
   final Map<String, dynamic> data;
-  final String? positionme;
-
-  const CardContainer({required this.data, required this.positionme});
+  String? storedData;
+  CardContainerNos({required this.data, required this.storedData});
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (positionme == 'NoStatus') {
-        } else {
+        if (storedData == 'backendstaff' ||storedData == 'Owner') {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return ViewProductDialog(
+              return ManageProductStockDialog(
                 data: data,
-                positionme: positionme,
               );
             },
           );
@@ -74,10 +71,10 @@ class CardContainer extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  const Icon(
-                    Icons.edit,
-                    color: Colorconstants.blacktext37465A,
-                  ),
+                  // const Icon(
+                  //   Icons.edit,
+                  //   color: Colorconstants.blacktext37465A,
+                  // ),
                 ],
               ),
               const SizedBox(height: 5),
@@ -110,14 +107,14 @@ class CardContainer extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 5),
-              Row(
-                children: [
-                  const Text("cardcontainerd.price").tr(),
-                  const Spacer(),
-                  Text("${data['price'] ?? 0}฿")
-                ],
-              ),
+              // const SizedBox(height: 5),
+              // Row(
+              //   children: [
+              //     const Text("cardcontainerd.price").tr(),
+              //     const Spacer(),
+              //     Text("${data['price'] ?? 0}฿")
+              //   ],
+              // ),
               // Row(
               //   children: [
               //     const Text("cardcontainerd.member").tr(),

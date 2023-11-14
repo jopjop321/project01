@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 class CustomContainer extends StatelessWidget {
   final Color color;
   final String title;
-  final String titleunit;
+  // final String titleunit;
   final double unit;
   final bool intUnit;
 
@@ -14,13 +14,14 @@ class CustomContainer extends StatelessWidget {
     super.key,
     required this.color,
     required this.title,
-    required this.titleunit,
+    // required this.titleunit,
     required this.unit,
     this.intUnit = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    print(unit);
     return Container(
       height: 25,
       padding: const EdgeInsets.all(8),
@@ -43,7 +44,7 @@ class CustomContainer extends StatelessWidget {
               ).tr(),
               const SizedBox(height: 5),
               Text(
-                "($titleunit)",
+                "dashboardscreen.baht",
                 style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
@@ -55,7 +56,9 @@ class CustomContainer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    "${unit == 0 ? 0 : !intUnit ? NumberFormat('#,###.0#').format(unit) : unit.toInt()}",
+                    // unit.toString(),
+                    "${NumberFormat('#,###.0#').format(unit.toDouble())}",
+                    // "${unit == 0 ? 0 : !intUnit ? NumberFormat('#,###.0#').format(unit) : unit.toDouble()}",
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,

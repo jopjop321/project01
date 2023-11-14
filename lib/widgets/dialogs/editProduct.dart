@@ -26,8 +26,9 @@ class _EditProductDialogState extends State<EditProductDialog> {
   final TextEditingController _descController = TextEditingController();
   final TextEditingController _costPriceController = TextEditingController();
   final TextEditingController _normalPriceController = TextEditingController();
-  final TextEditingController _memberPriceController = TextEditingController();
+  // final TextEditingController _memberPriceController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _lowstockController = TextEditingController();
 
   File? _imageFile;
   String? _imageName;
@@ -43,28 +44,29 @@ class _EditProductDialogState extends State<EditProductDialog> {
       _descController.text = widget.data['description'];
       _costPriceController.text = (widget.data['cost_price'] ?? 0).toString();
       _normalPriceController.text =
-          (widget.data['normal_price'] ?? 0).toString();
-      _memberPriceController.text =
-          (widget.data['member_price'] ?? 0).toString();
+          (widget.data['price'] ?? 0).toString();
+      // _memberPriceController.text =
+      //     (widget.data['member_price'] ?? 0).toString();
       _amountController.text = (widget.data['amount'] ?? 0).toString();
+      _lowstockController.text = (widget.data['low_stock'] ?? 0).toString();
     });
   }
 
   Future<void> _saveProduct() async {
     if (_formKey.currentState!.validate()) {
       try {
-        var url = Uri.parse('http://192.168.1.77:8080/products');
+        var url = Uri.parse('http://192.168.1.77:8080/product/edit');
         final db = FirebaseFirestore.instance;
 
         Map<String, dynamic> data = {
+          'id' : widget.data['id'],
           'name': _nameController.text,
           'code': _codeController.text,
           'description': _descController.text,
           'cost_price': Parser.toInt(_costPriceController.text),
-          'normal_price': Parser.toInt(_normalPriceController.text),
-          'member_price': Parser.toInt(_memberPriceController.text),
-          'amount': Parser.toInt(_amountController.text),
+          'price': Parser.toInt(_normalPriceController.text),
           'image': widget.data['image'],
+          'low_stock' : Parser.toInt(_lowstockController.text),
         };
 
         if (_imageFile != null) {
@@ -97,7 +99,7 @@ class _EditProductDialogState extends State<EditProductDialog> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const ProductScreen(),
+              builder: (context) => const Home(page_receive: "product",),
             ),
           );
           print('put request successful');
@@ -288,15 +290,20 @@ class _EditProductDialogState extends State<EditProductDialog> {
                   inputType: TextInputType.number,
                   controller: _normalPriceController,
                 ),
+                // FormProduct(
+                //   text: "edit_product.member_price".tr(),
+                //   inputType: TextInputType.number,
+                //   controller: _memberPriceController,
+                // ),
+                // FormProduct(
+                //   text: "edit_product.amount".tr(),
+                //   inputType: TextInputType.number,
+                //   controller: _amountController,
+                // ),
                 FormProduct(
-                  text: "edit_product.member_price".tr(),
+                  text: "add_product.lowstock".tr(),
                   inputType: TextInputType.number,
-                  controller: _memberPriceController,
-                ),
-                FormProduct(
-                  text: "edit_product.amount".tr(),
-                  inputType: TextInputType.number,
-                  controller: _amountController,
+                  controller: _lowstockController,
                 ),
                 const SizedBox(height: 10),
                 SizedBox(

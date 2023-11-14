@@ -1,8 +1,13 @@
 import 'package:jstock/constants/imports.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LogoScreen extends StatelessWidget {
+  // ProfileData? data2;
   @override
   Widget build(BuildContext context) {
+    //  final provider_profile =
+    //     Provider.of<ProfileProvider>(context, listen: false);
     Future.delayed(Duration(seconds: 2), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => LoginScreen()),
@@ -10,9 +15,10 @@ class LogoScreen extends StatelessWidget {
       checkSavedLoginStatus().then((isLoggedIn) {
         // นำทางไปยังหน้าที่เหมาะสมตามสถานะการเข้าสู่ระบบ
         if (isLoggedIn) {
+          // provider_profile.setData(data2!);         
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => DashboardScreen()),
+            MaterialPageRoute(builder: (context) => Home()),
           );
         } else {
           Navigator.pushReplacement(
@@ -84,11 +90,24 @@ class LogoScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-
-Future<bool> checkSavedLoginStatus() async {
+  Future<bool> checkSavedLoginStatus() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
   return isLoggedIn;
 }
+
+// Future<void> checkid() async {
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   int id = prefs.getInt('id') ?? 0;
+//   var response = await http.get(Uri.parse('http://192.168.1.77:8080/profile/${id}'));
+//   if (response.statusCode == 200) {
+//       final data = json.decode(response.body) as dynamic;
+//       data2 = ProfileData(employee_id: data['employee_id'],name: data['name'],lastname: data['last_name'],nickname: data['nickname'],position: data['position']);
+//       // return data2;
+//     } else {
+//       throw Exception('Failed to fetch products');
+//     }
+// }
+}
+
+

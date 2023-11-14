@@ -26,6 +26,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
   final TextEditingController _normalPriceController = TextEditingController();
   final TextEditingController _memberPriceController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _lowstockController = TextEditingController();
 
   File? _imageFile;
   String? _imageName;
@@ -43,9 +44,10 @@ class _AddProductDialogState extends State<AddProductDialog> {
           'code': _codeController.text,
           'description': _descController.text,
           'cost_price': int.parse(_costPriceController.text),
-          'normal_price': int.parse(_normalPriceController.text),
-          'member_price': int.parse(_memberPriceController.text),
-          'amount': int.parse(_amountController.text),
+          'price': int.parse(_normalPriceController.text),
+          // 'member_price': int.parse(_memberPriceController.text),
+          // 'amount': int.parse(_amountController.text),
+          'low_stock': int.parse(_lowstockController.text),
         };
 
         if (_imageFile != null) {
@@ -78,7 +80,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const ProductScreen(),
+              builder: (context) => const Home(page_receive: "product"),
             ),
           );
           print('POST request successful');
@@ -266,19 +268,24 @@ class _AddProductDialogState extends State<AddProductDialog> {
                   controller: _costPriceController,
                 ),
                 FormProduct(
-                  text: "add_product.normal_price".tr(),
+                  text: "add_product.price".tr(),
                   inputType: TextInputType.number,
                   controller: _normalPriceController,
                 ),
+                // FormProduct(
+                //   text: "add_product.member_price".tr(),
+                //   inputType: TextInputType.number,
+                //   controller: _memberPriceController,
+                // ),
+                // FormProduct(
+                //   text: "add_product.amount".tr(),
+                //   inputType: TextInputType.number,
+                //   controller: _amountController,
+                // ),
                 FormProduct(
-                  text: "add_product.member_price".tr(),
+                  text: "add_product.lowstock".tr(),
                   inputType: TextInputType.number,
-                  controller: _memberPriceController,
-                ),
-                FormProduct(
-                  text: "add_product.amount".tr(),
-                  inputType: TextInputType.number,
-                  controller: _amountController,
+                  controller: _lowstockController,
                 ),
                 const SizedBox(height: 10),
                 SizedBox(

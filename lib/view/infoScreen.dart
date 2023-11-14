@@ -6,29 +6,27 @@ import 'package:jstock/widgets/dialogs/addProduct.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class ProductScreen extends StatefulWidget {
+class InfoScreen extends StatefulWidget {
   final bool addProduct;
 
-  const ProductScreen({
+  const InfoScreen({
     super.key,
     this.addProduct = false,
   });
 
   @override
-  State<ProductScreen> createState() => _ProductScreenState();
+  State<InfoScreen> createState() => _InfoScreenState();
 }
 
-class _ProductScreenState extends State<ProductScreen> {
+class _InfoScreenState extends State<InfoScreen> {
   final formKey = GlobalKey<FormState>();
   Profile profile = Profile();
   final NavigationDrawerState state = NavigationDrawerState();
   bool isDrawerOpen = false;
   String? scanresult;
-  String? positionme;
   TextEditingController _searchController = TextEditingController();
   ScrollController _scrollController = ScrollController();
   List<dynamic> _searchResults = [];
-  String? storedData;
 
   void toggleDrawer() {
     setState(
@@ -41,9 +39,6 @@ class _ProductScreenState extends State<ProductScreen> {
   @override
   void initState() {
     super.initState();
-    SharedPreferences.getInstance().then((prefs) {
-      storedData = prefs.getString('position') ?? 'NoStatus';
-    });
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (widget.addProduct) {
         showDialog(
@@ -56,13 +51,12 @@ class _ProductScreenState extends State<ProductScreen> {
     });
   }
 
-  Future<List<dynamic>> _listProducts() async {
+  Future<List<dynamic>>
+      _listinfo() async {
     final response =
-        await http.get(Uri.parse('http://192.168.1.77:8080/products'));
+        await http.get(Uri.parse('http://192.168.1.77:8080/profile/all'));
     if (response.statusCode == 200) {
       final data = json.decode(response.body) as List<dynamic>;
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      positionme = prefs.getString('position');
       // final data1 = response.body;
       // print("\n : ${data[1]['code']}");
       return data;
@@ -73,7 +67,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
   Future<List<dynamic>> _getProducts() async {
     final response =
-        await http.get(Uri.parse('http://192.168.1.77:8080/products'));
+        await http.get(Uri.parse('http://192.168.1.77:8080/profile/all'));
     if (response.statusCode == 200) {
       final data = json.decode(response.body) as List<dynamic>;
       return data;
@@ -92,24 +86,24 @@ class _ProductScreenState extends State<ProductScreen> {
 //   return data;
 // }
 
-  List<Widget> _buildProducts(
-      List<QueryDocumentSnapshot<Map<String, dynamic>>> data) {
-    List<Widget> list = [];
+  // List<Widget> _buildProducts(
+  //     List<QueryDocumentSnapshot<Map<String, dynamic>>> data) {
+  //   List<Widget> list = [];
 
-    for (var product in data) {
-      list.add(
-        CardContainer(
-          data: product.data(),
-          positionme: positionme,
-        ),
-      );
-    }
+  //   for (var product in data) {
+  //     list.add(
+  //       CardContainer(
+  //         data: product.data(),
+  //       ),
+  //     );
+  //   }
 
-    return list;
-  }
+  //   return list;
+  // }
 
   void _performSearch(String value) async {
-    List<dynamic> products = await _listProducts();
+    List<dynamic> products =
+        await _listinfo();
     setState(() {
       _searchResults = products.where((product) {
         final productName = product['name'].toString().toLowerCase();
@@ -133,7 +127,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 Row(
                   children: [
                     const Text(
-                      'product.product',
+                      'info.info',
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
@@ -151,28 +145,22 @@ class _ProductScreenState extends State<ProductScreen> {
                           ),
                         ),
                         onPressed: () {
-                          if (storedData == 'NoStatus') {
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return const AddProductDialog();
-                              },
-                            );
-                          }
+                          setState(() {
+                            
+                          });
                         },
                         child: Row(
                           children: [
-                            Expanded(
-                                flex: 1, child: Icon(Icons.add_circle_outline)),
-                            SizedBox(
-                              width: 5,
-                            ),
+                            // Expanded(
+                            //     flex: 1, child: Icon(Icons.add_circle_outline)),
+                            // SizedBox(
+                            //   width: 5,
+                            // ),
                             Expanded(
                                 flex: 5,
                                 child: Center(
                                   child: Text(
-                                    "add_product.add_product",
+                                    "info.reset",
                                   ).tr(),
                                 ))
                           ],
@@ -181,48 +169,46 @@ class _ProductScreenState extends State<ProductScreen> {
                     )
                   ],
                 ),
-                // const SizedBox(
-                //   height: 20,
-                // ),
                 TextField(
                   controller: _searchController,
                   decoration: const InputDecoration(
-                    hintText: "Search for product",
+                    hintText: "Search",
                   ),
                   onChanged: _performSearch,
                 ),
                 const SizedBox(
                   height: 20,
                 ),
-                FutureBuilder<List<dynamic>>(
-                  future: _listProducts(),
+                FutureBuilder<
+                    List<dynamic>>(
+                  future: _listinfo(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else {
-                      List<dynamic> products = snapshot.data!;
-                      List<dynamic> displayedProducts =
+                      List<dynamic>
+                          products = snapshot.data!;
+                      List<dynamic>
+                          displayedProducts =
                           _searchResults.isNotEmpty ? _searchResults : products;
                       return GridView.builder(
                         padding: EdgeInsets.zero,
                         physics: const NeverScrollableScrollPhysics(),
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
+                          crossAxisCount: 1,
                           crossAxisSpacing: 10,
                           mainAxisSpacing: 10,
-                          childAspectRatio: 153 / 210,
+                          childAspectRatio: 153 / 30,
                         ),
                         itemCount: displayedProducts.length,
                         shrinkWrap: true,
                         scrollDirection: Axis.vertical,
                         itemBuilder: (context, index) {
-                          
-                          return CardContainer(
+                          return CardContainerInfo(
                             data: displayedProducts[index],
-                            positionme: storedData,
                           );
                         },
                       );
@@ -241,15 +227,3 @@ class _ProductScreenState extends State<ProductScreen> {
     );
   }
 }
-
-// class NotesNotifier with ChangeNotifier {
-//   Iterable<NoteModel> result = [];
-
-//   void search(String value) {
-//     Box<NoteModel> eventsBox = Hive.box<NoteModel>('notes');
-//     result = eventsBox.values.where(
-//       (e) => e.text.toLowerCase().contains(value.toLowerCase()),
-//     );
-//     notifyListeners();
-//   }
-// }

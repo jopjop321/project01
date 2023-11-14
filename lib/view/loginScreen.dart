@@ -20,6 +20,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final provider_profile =
+        Provider.of<ProfileProvider>(context, listen: false);
     return FutureBuilder(
       future: firebase,
       builder: (context, snapshot) {
@@ -151,8 +153,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                     };
                                     var response = await http.post(url,
                                         body: json.encode(data));
-                                    print(
-                                        "email:${profile.email} password:${profile.password}");
+                                    // print(
+                                    //     "email:${profile.email} password:${profile.password}");
+                                    // print(response.body);
+                                    
                                     if (response.statusCode == 200) {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(SnackBar(
@@ -167,23 +171,31 @@ class _LoginScreenState extends State<LoginScreen> {
                                         backgroundColor: Colors.green[400],
                                       ));
                                       final data2 = jsonDecode(response.body);
+                                      // print(data2);
                                       SharedPreferences prefs =
                                           await SharedPreferences.getInstance();
                                       await prefs.setBool('isLoggedIn', true);
-                                      print(data2['employeeid']);
-                                      await prefs.setInt(
-                                          'employeeid', data2['employeeid']);
-                                      await prefs.setString(
-                                          'position', data2['position']);
-                                      await prefs.setString(
-                                          'nickname', data2['nickname']);
+                                      await prefs.setInt('id', data2['employee_id']);
+                                      await prefs.setString('position', data2['position']);
+                                      await prefs.setString('name', data2['name']);
+                                      await prefs.setString('lastname', data2['last_name']);
+                                      await prefs.setString('nickname', data2['nickname']);
+                                      print("${prefs.getInt('id')} ${prefs.getString('position')}");
+                                      provider_profile.setData(
+                                        ProfileData(
+                                          employee_id: data2['employee_id'],
+                                          name: data2['name'],
+                                          lastname: data2['last_name'],
+                                          nickname: data2['nickname'],
+                                          position: data2['position'],
+                                        ),
+                                      );
+                                      print(provider_profile.getDataid());
                                       formKey.currentState!.reset();
-                                      print(data2);
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) =>
-                                              DashboardScreen(),
+                                          builder: (context) => Home(),
                                         ),
                                       );
                                       print('POST request successful');
@@ -193,7 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           'POST request failed with status: ${response.statusCode}');
                                     }
                                   } on Error catch (e) {
-                                    // print(e.message);
+                                    // print(e);
                                     Fluttertoast.showToast(
                                         msg: "เข้าสู่ระบบไม่สำเร็จ",
                                         gravity: ToastGravity.CENTER);
@@ -227,7 +239,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       decoration: TextDecoration.underline,
                                       fontSize: 14,
                                       fontWeight: FontWeight.normal,
-                                      color: Colorconstants.graytext75,
+                                      color: Colorconstants.blue195DD1,
                                     ),
                                   )
                                 ])),

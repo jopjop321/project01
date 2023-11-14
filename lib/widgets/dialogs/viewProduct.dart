@@ -11,17 +11,19 @@ import 'dart:convert';
 
 class ViewProductDialog extends StatefulWidget {
   Map<String, dynamic> data;
+  String? positionme;
 
-  ViewProductDialog({super.key, required this.data});
+  ViewProductDialog({super.key, required this.data , required this.positionme});
 
   @override
   State<ViewProductDialog> createState() => _ViewProductDialogState();
 }
 
 class _ViewProductDialogState extends State<ViewProductDialog> {
+  String? positionme;
   List<String> options = [
-    'view.sell'.tr(),
-    'view.add'.tr(),
+    // 'view.sell'.tr(),
+    // 'view.add'.tr(),
     'view.edit'.tr(),
     'view.delete'.tr()
   ];
@@ -30,20 +32,19 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
       // final db = FirebaseFirestore.instance;
       // await db.collection('products').doc(widget.data['code']).delete();
 
-      final response =
-          await http.delete(Uri.parse('http://192.168.1.77:8080/products/${widget.data['code']}'));
+      final response = await http.delete(
+          Uri.parse('http://192.168.1.77:8080/products/${widget.data['id']}'));
       if (response.statusCode == 200) {
         if (widget.data['image'] != null) {
-        final storage = FirebaseStorage.instance.ref();
-        final image = storage
-            .child('${FirebaseConfig.storageImagePath}/${widget.data['code']}');
-        await image.delete();
-      }
+          final storage = FirebaseStorage.instance.ref();
+          final image = storage.child(
+              '${FirebaseConfig.storageImagePath}/${widget.data['code']}');
+          await image.delete();
+        }
         print('ลบข้อมูลสำเร็จ');
       } else {
         print('เกิดข้อผิดพลาดในการลบข้อมูล: ${response.statusCode}');
       }
-      
     } on Error catch (e) {
       print(e);
     }
@@ -67,7 +68,7 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
             return ConfirmDialog(
               title: 'Confirm Delete Product',
               description:
-                  'Are you sure you want to delete product "${widget.data['code']}"?',
+                  'Are you sure you want to delete product "${widget.data['id']}"?',
               onConfirm: () async {
                 await _deleteProduct();
 
@@ -75,7 +76,7 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
                 Navigator.pushReplacement(
                   widgetContext,
                   MaterialPageRoute(
-                    builder: (context) => const ProductScreen(),
+                    builder: (context) => const Home(page_receive: "product"),
                   ),
                 );
               },
@@ -83,14 +84,14 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
           },
         );
         break;
-      case 'Sell':
-        showDialog(
-          context: context,
-          builder: (context) {
-            return SellProductDialog(data: widget.data);
-          },
-        );
-        break;
+      // case 'Sell':
+      //   showDialog(
+      //     context: context,
+      //     builder: (context) {
+      //       return SellProductDialog(data: widget.data);
+      //     },
+      //   );
+      //   break;
       case 'Add':
         showDialog(
           context: context,
@@ -114,7 +115,7 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
             return ConfirmDialog(
               title: 'ยืนยันจะลบสินค้า',
               description:
-                  'คุณแน่ใจหรือไม่ว่าต้องการลบสินค้า "${widget.data['code']}"?',
+                  'คุณแน่ใจหรือไม่ว่าต้องการลบสินค้า "${widget.data['id']}"?',
               onConfirm: () async {
                 await _deleteProduct();
 
@@ -130,14 +131,14 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
           },
         );
         break;
-      case 'ขาย':
-        showDialog(
-          context: context,
-          builder: (context) {
-            return SellProductDialog(data: widget.data);
-          },
-        );
-        break;
+      // case 'ขาย':
+      //   showDialog(
+      //     context: context,
+      //     builder: (context) {
+      //       return SellProductDialog(data: widget.data);
+      //     },
+      //   );
+      //   break;
       case 'เพิ่ม':
         showDialog(
           context: context,
@@ -148,12 +149,12 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
         break;
     }
   }
+  
 
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-
     return AlertDialog(
       content: Container(
         decoration: BoxDecoration(
@@ -270,27 +271,31 @@ class _ViewProductDialogState extends State<ViewProductDialog> {
               ),
             ),
             const SizedBox(height: 20),
-            Row(
-              children: [
-                const Text("add_product.cost_price").tr(),
-                const Spacer(),
-                Text("${widget.data['cost_price'] ?? 0}฿")
-              ],
+            Visibility(
+              visible: positionme == 'Owner',
+              child: Row(
+                children: [
+                  const Text("add_product.cost_price").tr(),
+                  const Spacer(),
+                  Text("${widget.data['cost_price'] ?? 0}฿")
+                ],
+              ),
             ),
+
             Row(
               children: [
                 const Text("add_product.price").tr(),
                 const Spacer(),
-                Text("${widget.data['normal_price'] ?? 0}฿")
+                Text("${widget.data['price'] ?? 0}฿")
               ],
             ),
-            Row(
-              children: [
-                const Text("add_product.member_price").tr(),
-                const Spacer(),
-                Text("${widget.data['member_price'] ?? 0}฿")
-              ],
-            ),
+            // Row(
+            //   children: [
+            //     const Text("add_product.member_price").tr(),
+            //     const Spacer(),
+            //     Text("${widget.data['member_price'] ?? 0}฿")
+            //   ],
+            // ),
           ],
         ),
       ),

@@ -13,6 +13,13 @@ List languageCode = ["en", "th"];
 List countryCode = ["US", "TH"];
 
 class _DrawerWidgetState extends State<DrawerWidget> {
+  String? nickname;
+  
+  Future<String> readData(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(key)!;
+  }
+
   Widget _buildLanguageOption(
       String languageName, String langCode, String countryCode) {
     return InkWell(
@@ -29,17 +36,13 @@ class _DrawerWidgetState extends State<DrawerWidget> {
       ),
     );
   }
+
   
-  Future<String> readData(String key) async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString(key)!;
-  }
-  
-  
-  
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      backgroundColor: Color.fromARGB(255, 229, 240, 250),
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
@@ -64,12 +67,12 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 ).tr(),
                 SizedBox(height: 8),
                 Text(
-                  'darwer.welcome',
+                  '${'darwer.welcome'.tr()}',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                   ),
-                ).tr(),
+                ),
                 SizedBox(height: 8),
               ],
             ),
@@ -81,75 +84,106 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const DashboardScreen(),
+                  builder: (context) => const Home(),
                 ),
               );
             },
           ),
           ListTile(
-            leading: const Icon(Icons.add_shopping_cart),
-            title: const Text('darwer.pos', style: TextStyle(fontSize: 18)).tr(),
+            leading: const Icon(Icons.settings),
+            title: Text('setting.setting', style: TextStyle(fontSize: 18)).tr(),
             onTap: () {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const PosScreen(),
+                  builder: (context) => const SettingScreen(),
                 ),
               );
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.add_business_outlined),
-            title: const Text('darwer.nos', style: TextStyle(fontSize: 18)).tr(),
-            onTap: () {
-              Navigator.pushNamed(context, '/nos');
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.trolley),
-            title: const Text('darwer.product', style: TextStyle(fontSize: 18)).tr(),
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ProductScreen(),
-                ),
-              );
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.add_sharp),
-            title: const Text('darwer.add_product',
-                style: TextStyle(fontSize: 18)).tr(),
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ProductScreen(
-                    addProduct: true,
-                  ),
-                ),
-              );
-              // Navigator.pop(context);
-              // นำทางไปยังหน้า Settings
-            },
-          ),
+          // ListTile(
+          //   leading: const Icon(Icons.add_shopping_cart),
+          //   title: const Text('darwer.pos', style: TextStyle(fontSize: 18)).tr(),
+          //   onTap: () {
+          //     Navigator.pushReplacement(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) => const PosScreen(),
+          //       ),
+          //     );
+          //   },
+          // ),
+          // ListTile(
+          //   leading: const Icon(Icons.add_business_outlined),
+          //   title: const Text('darwer.nos', style: TextStyle(fontSize: 18)).tr(),
+          //   onTap: () {
+          //     Navigator.pushNamed(context, '/nos');
+          //   },
+          // ),
+          // ListTile(
+          //   leading: const Icon(Icons.trolley),
+          //   title: const Text('darwer.product', style: TextStyle(fontSize: 18)).tr(),
+          //   onTap: () {
+          //     Navigator.pushReplacement(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) => const ProductScreen(),
+          //       ),
+          //     );
+          //   },
+          // ),
+          // ListTile(
+          //   leading: const Icon(Icons.add_sharp),
+          //   title: const Text('darwer.add_product',
+          //       style: TextStyle(fontSize: 18)).tr(),
+          //   onTap: () {
+          //     Navigator.pushReplacement(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) => const ProductScreen(
+          //           addProduct: true,
+          //         ),
+          //       ),
+          //     );
+          //     // Navigator.pop(context);
+          //     // นำทางไปยังหน้า Settings
+          //   },
+          // ),
           const Divider(color: Colors.grey),
-          ListTile(
-            leading: const Icon(Icons.account_circle_outlined),
-            title: const Text('darwer.profile', style: TextStyle(fontSize: 18)).tr(),
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ProductScreen(),
-                ),
-              );
-            },
-          ),
+          // Visibility(
+          //   visible: widget.data['position'] != 'Owner',
+          //   child: ListTile(
+          //     leading: const Icon(Icons.account_circle_outlined),
+          //     title:
+          //         const Text('darwer.profile', style: TextStyle(fontSize: 18))
+          //             .tr(),
+          //     onTap: () {
+          //       Navigator.pushReplacement(
+          //         context,
+          //         MaterialPageRoute(
+          //           builder: (context) => const ProductScreen(),
+          //         ),
+          //       );
+          //     },
+          //   ),
+          // ),
+
+          // ListTile(
+          //   leading: const Icon(Icons.account_circle_outlined),
+          //   title: const Text('darwer.profile', style: TextStyle(fontSize: 18)).tr(),
+          //   onTap: () {
+          //     Navigator.pushReplacement(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) => const ProductScreen(),
+          //       ),
+          //     );
+          //   },
+          // ),
           ListTile(
             leading: const Icon(Icons.logout),
-            title: const Text('darwer.logout', style: TextStyle(fontSize: 18)).tr(),
+            title: const Text('darwer.logout', style: TextStyle(fontSize: 18))
+                .tr(),
             onTap: () async {
               try {
                 SharedPreferences prefs = await SharedPreferences.getInstance();

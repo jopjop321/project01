@@ -2,6 +2,9 @@
     "dashboardscreen": {
         "total_income": "รายได้",
         "monthly_income": "รายได้(ต่อเดือน)",
+        "yearly_income": "รายได้(ต่อปี)",
+        "monthly_profit": "กำไร(ต่อเดือน)",
+        "yearly_profit": "กำไร(ต่อปี)",
         "total_profit": "กำไร",
         "total_selling": "จำนวนสินค้าขาย",
         "baht": "บาท",
@@ -12,95 +15,125 @@
             "name": "ชื่อ",
             "unit": "จำนวนชิ้น",
             "amount": "ราคารวม"
-        }
+        },
+        "date" : "วัน/เดือน/ปี",
+        "profit" : "กำไร",
+        "open" : "เปิด"
     },
-    "login":{
-        "loginb":"เข้าสู่ระบบ",
-        "username":"ชื่อผู้ใช้",
-        "password":"รหัสผ่าน",
-        "login":"เข้าสู่ระบบ",
+    "login": {
+        "loginb": "เข้าสู่ระบบ",
+        "username": "ชื่อผู้ใช้",
+        "password": "รหัสผ่าน",
+        "login": "เข้าสู่ระบบ",
         "not_amember": "ยังไม่มีบัญชีผู้ใช้? ",
         "signup": "สมัครสมาชิก"
-       
     },
-    "signup":{
-        "signup":"สมัครสมาชิก",
-        "name":"ชื่อ",
-        "lastname":"นามสกุล",
-        "nickname":"ชื่อเล่น",
-        "username":"ชื่อผู้ใช้",
-        "password":"รหัสผ่าน",
-        "confirmpassword":"ยืนยันรหัสผ่าน"
+    "signup": {
+        "signup": "สมัครสมาชิก",
+        "register": "ลงทะเบียน",
+        "name": "ชื่อ",
+        "lastname": "นามสกุล",
+        "nickname": "ชื่อเล่น",
+        "username": "ชื่อผู้ใช้",
+        "password": "รหัสผ่าน",
+        "confirmpassword": "ยืนยันรหัสผ่าน",
+        "already_member": "เป็นสมาชิกแล้ว? ",
+        "login": "เข้าสู่ระบบ"
     },
-    "darwer":{
-        "menu" : "เมนู",
-        "welcome" : "ยินดีต้อนรับ",
-        "home" : "หน้าแรก",
-        "pos" : "ขายสินค้า",
-        "nos" : "สินค้าที่ใกล้จะหมด",
-        "product" : "สินค้า",
-        "add_product" : "เพิ่มสินค้า",
-        "logout" : "ออกจากระบบ",
-        "select_lnguage" : "เลือกภาษา",
+    "darwer": {
+        "menu": "เมนู",
+        "welcome": "ยินดีต้อนรับ",
+        "home": "หน้าแรก",
+        "pos": "ขายสินค้า",
+        "nos": "สินค้าที่ใกล้จะหมด",
+        "product": "สินค้า",
+        "add_product": "เพิ่มสินค้า",
+        "logout": "ออกจากระบบ",
+        "select_lnguage": "เลือกภาษา",
         "profile": "โปรไฟล์"
     },
-    "cardcontainerdashboard" :{
-        "total_amount" : "ขายได้ :",
-        "amount" : "เหลือ :"
+    "cardcontainerdashboard": {
+        "total_amount": "ขายได้ :",
+        "amount": "เหลือ :"
     },
-    "cardcontainerd" : {
-        "remaining" : "ที่เหลืออยู่",
-        "price" : "ทั่วไป",
-        "member" : "สมาชิก"
+    "cardcontainerd": {
+        "remaining": "ที่เหลืออยู่",
+        "price": "ทั่วไป",
+        "member": "สมาชิก"
     },
-    "add_product":{
-        "add_product" : "เพิ่มสินค้า",
-        "product_name" : "ชื่อสินค้า",
-        "product_code" : "รหัสสินค้า",
-        "description" : "รายละเอียด",
-        "image" : "รูปภาพ",
-        "cost_price" : "ราคาต้นทุน",
+    "add_product": {
+        "add_product": "เพิ่มสินค้า",
+        "product_name": "ชื่อสินค้า",
+        "product_code": "รหัสสินค้า",
+        "description": "รายละเอียด",
+        "image": "รูปภาพ",
+        "cost_price": "ราคาต้นทุน",
+        "price": "ราคา",
+        "member_price": "ราคาสมาชิก",
+        "amount": "จำนวน",
+        "lowstock" : "เตือนสินค้าเหลือน้อย"
+    },
+    "edit_product": {
+        "edit_product": "แก้ไขสินค้า",
+        "product_name": "ชื่อสินค้า",
+        "product_code": "รหัสสินค้า",
+        "description": "รายละเอียด",
+        "image": "รูปภาพ",
+        "cost_price": "ราคาต้นทุน",
         "normal_price": "ราคาทั่วไป",
         "member_price": "ราคาสมาชิก",
-        "amount" : "จำนวน"
+        "amount": "จำนวน",
+        "seve": "บันทึก"
     },
-    "edit_product" : {
-        "edit_product" : "แก้ไขสินค้า",
-        "product_name" : "ชื่อสินค้า",
-        "product_code" : "รหัสสินค้า",
-        "description" : "รายละเอียด",
-        "image" : "รูปภาพ",
-        "cost_price" : "ราคาต้นทุน",
-        "normal_price": "ราคาทั่วไป",
-        "member_price": "ราคาสมาชิก",
-        "amount" : "จำนวน",
-        "seve" : "บันทึก"
+    "product": {
+        "product": "สินค้า",
+        "search_for_products": "ค้นหาสินค้า"
     },
-    "product" : {
-        "product" : "สินค้า",
-        "search_for_products" : "ค้นหาสินค้า"
+    "view": {
+        "sell": "ขาย",
+        "add": "เพิ่ม",
+        "edit": "แก้ไข",
+        "delete": "ลบ",
+        "action": "เพิ่มเติม"
     },
-    "view" :{
-        "sell" : "ขาย",
-        "add" : "เพิ่ม",
-        "edit" : "แก้ไข",
-        "delete" : "ลบ",
-        "action" : "เพิ่มเติม"
+    "sell": {
+        "sell_product": "ขายสินค้า",
+        "membership": "เป็นสมาชิก",
+        "yes": "ใช่",
+        "no": "ไม่ใช่",
+        "total": "ราคารวม"
     },
-    "sell" : {
-        "sell_product" : "ขายสินค้า",
-        "membership" : "เป็นสมาชิก",
-        "yes" : "ใช่",
-        "no" : "ไม่ใช่",
-        "total" : "ราคารวม"
-      },
-      "add_stock" : {
-        "add_stock" : "เพิ่มสินค้า"
+    "add_stock": {
+        "add_stock": "เพิ่มสินค้า"
     },
-    "confirm" : "ยืนยัน",
-    "cancel" : "ยกเลิก",
-    "amount" : "จำนวน",
-    "neary_of_stock" : "สินค้าที่ใกล้จะหมด",
-    "total_price" : "ราคารวม",
-    "list" : "รายการ"
+    "pos": {
+        "pos": "ระบบจุดขาย",
+        "reset":"รีเซ็ต"
+    },
+    "nos": {
+        "nos": "คลังสินค้า"
+    },
+    "setting":{
+        "setting" : "ตั้งค่า",
+        "id" : "ไอดี",
+        "name" : "ชื่อ",
+        "lastname" : "นามสกุล",
+        "nickname" : "ชื่อเล่น",
+        "position" : "ตำแหน่ง",
+        "edit_profile" : "Edit Profile"
+    },
+    "info":{
+        "info":"ข้อมูล",
+        "reset":"รีเซ็ต",
+        "update" : "เปลี่ยนแปลง",
+        "status" : "สถานะ",
+        "name" :"ชื่อ"
+
+    },
+    "confirm": "ยืนยัน",
+    "cancel": "ยกเลิก",
+    "amount": "จำนวน",
+    "neary_of_stock": "สินค้าที่ใกล้จะหมด",
+    "total_price": "ราคารวม",
+    "list": "รายการ"
 }

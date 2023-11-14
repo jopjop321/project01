@@ -23,12 +23,15 @@ class _PosScreenState extends State<PosScreen> {
       if (_products.isEmpty) {
         for (var product in data2) {
           Product datalist = Product(
+            id: product['id'],
             code: product['code'],
             costPrice: product['cost_price'],
             name: product['name'],
-            price: product['normal_price'],
+            price: product['price'],
+            image : product['image'],
             amount: product['amount'],
-            sell: product['sell'],
+            quantity:0
+            // sell: product['sell'],
           );
           _products.add(datalist);
         }
@@ -56,12 +59,14 @@ class _PosScreenState extends State<PosScreen> {
     await flutterLocalNotificationsPlugin.show(
         index, title, body, platfromChannelDetails);
   }
-
+  
   Future<void> _submit() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? employeeid = prefs.getInt('employeeid');
     int index = 1;
     try {
       final db = FirebaseFirestore.instance;
-      var url = Uri.parse('http://192.168.1.77:8080/products/sell');
+      var url = Uri.parse('http://192.168.1.77:8080//product/sell/${employeeid}');
       // List<Map<String, dynamic>> data =
       //     _products.where((e) => e.quantity > 0).map((product) {
       //   return {
@@ -80,10 +85,6 @@ class _PosScreenState extends State<PosScreen> {
       //   await db.collection('sells').add(item);
       // }
       for (var i = 0; i < _products.length; i++) {
-        // await db.collection('products').doc(_products[i].code).update({
-        //   'amount': _products[i].amount - _products[i].quantity,
-        //   'sell': _products[i].sell + _products[i].quantity,
-        // });
         Map<String, dynamic> data = {
           'code': _products[i].code,
           'name': _products[i].name,
@@ -146,10 +147,10 @@ class _PosScreenState extends State<PosScreen> {
   @override
   Widget build(BuildContext context) {
     String searchKeyword = ''; // ตัวแปรสำหรับเก็บคำค้นหา
-
     return Scaffold(
-      appBar: AppBarWidget(),
-      drawer: DrawerWidget(),
+      backgroundColor: Colorconstants.transparent,
+      // appBar: AppBarWidget(),
+      // drawer: DrawerWidget(),
       body: Column(
         children: [
           // TextField(
@@ -270,25 +271,7 @@ class _PosScreenState extends State<PosScreen> {
   }
 }
 
-class Product {
-  final String code;
-  final int costPrice;
-  final String name;
-  final int price;
-  final int amount;
-  final int sell;
-  int quantity;
 
-  Product({
-    this.quantity = 0,
-    required this.name,
-    required this.price,
-    required this.code,
-    required this.costPrice,
-    required this.amount,
-    required this.sell,
-  });
-}
 
 class QuantitySelector extends StatefulWidget {
   final ValueChanged<int> onChanged;

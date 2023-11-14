@@ -46,6 +46,8 @@ class MyApp extends StatelessWidget {
             return TotlaProvider();
           },
         ),
+        ChangeNotifierProvider(create: (context) => PosProvider()),
+        ChangeNotifierProvider(create: (context) => ProfileProvider()),
       ],
       child: MaterialApp(
         title: 'Jstock',
@@ -58,6 +60,7 @@ class MyApp extends StatelessWidget {
         home: LogoScreen(),
         debugShowCheckedModeBanner: false,
         routes: {
+          '/home': (context) => Home(),
           '/pos': (context) => PosScreen(),
           '/nos': (context) => NearyofstockScreen(),
         },

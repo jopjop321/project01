@@ -5,6 +5,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:jstock/widgets/dialogs/addProduct.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
 class NearyofstockScreen extends StatefulWidget {
   final bool addProduct;
 
@@ -25,9 +26,10 @@ class _NearyofstockScreenState extends State<NearyofstockScreen> {
   String? scanresult;
   TextEditingController _searchController = TextEditingController();
   ScrollController _scrollController = ScrollController();
-  List<QueryDocumentSnapshot<Map<String, dynamic>>> _searchResults = [];
-  List<Map<String, dynamic>>? listdata = [];
-
+  List<dynamic> _searchResults = [];
+  String? positionme;
+  bool isToggled = false;
+  String? storedData;
   void toggleDrawer() {
     setState(
       () {
@@ -39,6 +41,8 @@ class _NearyofstockScreenState extends State<NearyofstockScreen> {
   @override
   void initState() {
     super.initState();
+    SharedPreferences.getInstance().then((prefs) {
+      storedData = prefs.getString('position') ?? 'NoStatus';});
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (widget.addProduct) {
         showDialog(
@@ -51,37 +55,13 @@ class _NearyofstockScreenState extends State<NearyofstockScreen> {
     });
   }
 
-  Future<Map<String, dynamic>> _fetchData1() async {
-    final db = FirebaseFirestore.instance;
-    final products = await db.collection('products').get();
-
-    if (listdata!.isEmpty) {
-      for (var product in products.docs) {
-        Map<String, dynamic> _datalist = {
-          'name': product['name'],
-          'sell': product['sell'],
-          'image': product['image'],
-          'amount': product['amount'],
-        };
-        // print(_datalist['name']);
-        listdata!.add(_datalist);
-        // print(listdata);
-      }
-    }
-
-    // print(listdata);
-    listdata!.sort(((a, b) => a['amount'].compareTo(b['amount'])));
-    // print(listdata);
-
-    return {'data1': listdata![0], 'data2': listdata![1]};
-  }
-
-   Future<List<dynamic>>
-      _listProducts() async {
+  Future<List<dynamic>> _listProducts() async {
     final response =
-        await http.get(Uri.parse('http://192.168.1.77:8080/products/nos'));
+        await http.get(Uri.parse('http://192.168.1.77:8080/products'));
     if (response.statusCode == 200) {
       final data = json.decode(response.body) as List<dynamic>;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      positionme = prefs.getString('position');
       // final data1 = response.body;
       // print("\n : ${data[1]['code']}");
       return data;
@@ -89,13 +69,27 @@ class _NearyofstockScreenState extends State<NearyofstockScreen> {
       throw Exception('Failed to fetch products');
     }
   }
-  // Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
-  //     _listProducts() async {
-  //   final db = FirebaseFirestore.instance;
-  //   final snapshot =
-  //       await db.collection('products').where('amount', isLessThan: 10).get();
-  //   return snapshot.docs;
-  // }
+
+  Future<List<dynamic>> _getProducts() async {
+    final response =
+        await http.get(Uri.parse('http://192.168.1.77:8080/products'));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body) as List<dynamic>;
+      return data;
+    } else {
+      throw Exception('Failed to fetch products');
+    }
+  }
+
+//   Future<void> fetchData() async {
+//   final response = await http.get(Uri.parse('http://localhost:8080/products'));
+//   if (response.statusCode == 200) {
+//     final data = response.body;
+//   } else {
+//     print('Failed to fetch data');
+//   }
+//   return data;
+// }
 
   List<Widget> _buildProducts(
       List<QueryDocumentSnapshot<Map<String, dynamic>>> data) {
@@ -105,6 +99,7 @@ class _NearyofstockScreenState extends State<NearyofstockScreen> {
       list.add(
         CardContainer(
           data: product.data(),
+          positionme: positionme,
         ),
       );
     }
@@ -112,21 +107,36 @@ class _NearyofstockScreenState extends State<NearyofstockScreen> {
     return list;
   }
 
-  // void _performSearch(String value) async {
-  //   List<QueryDocumentSnapshot<Map<String, dynamic>>> products =
-  //       await _listProducts();
-  //   setState(() {
-  //     _searchResults = products.where((product) {
-  //       final productName = product.data()['amount'];
-  //       return productName.contains(value);
-  //     }).toList();
-  //   });
-  // }
+  void _performfilter() async {
+    List<dynamic> products = await _listProducts();
+    setState(() {
+      _searchResults = products.where((product) => product['low_stock'] > product['amount']).toList();
+    });
+  }
+  void _performNonfilter() async {
+    List<dynamic> products = await _listProducts();
+    setState(() {
+      _searchResults = products.where((product) => product['amount']>=0).toList();
+    });
+  }
+  
+
+  void _performSearch(String value) async {
+    List<dynamic> products = await _listProducts();
+    setState(() {
+      _searchResults = products.where((product) {
+        final productName = product['name'].toString().toLowerCase();
+        return productName.contains(value.toLowerCase());
+      }).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    //  String searchtext = 'product.search_for_products'.tr();
     return Scaffold(
-      appBar: AppBarWidget(),
+      backgroundColor: Colorconstants.transparent,
+      // appBar: AppBarWidget(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
@@ -136,7 +146,7 @@ class _NearyofstockScreenState extends State<NearyofstockScreen> {
                 Row(
                   children: [
                     const Text(
-                      'neary_of_stock',
+                      'nos.nos',
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
@@ -144,50 +154,67 @@ class _NearyofstockScreenState extends State<NearyofstockScreen> {
                       ),
                     ).tr(),
                     const Spacer(),
-                    // ElevatedButton(
-                    //   style: ElevatedButton.styleFrom(
-                    //     backgroundColor: Colorconstants.blue195DD1,
-                    //     shape: RoundedRectangleBorder(
-                    //       borderRadius: BorderRadius.circular(8),
-                    //     ),
-                    //   ),
-                    //   onPressed: () {
-                    //     showDialog(
-                    //       context: context,
-                    //       builder: (BuildContext context) {
-                    //         return const AddProductDialog();
-                    //       },
-                    //     );
-                    //   },
-                    //   child: Row(
-                    //     children: [
-                    //       Icon(Icons.add_circle_outline),
-                    //       SizedBox(
-                    //         width: 5,
-                    //       ),
-                    //       Text(
-                    //         "   เพิ่มสินค้า     ",
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
+                    Container(
+                      width: 160,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colorconstants.redE73134,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            isToggled = !isToggled;
+                          });
+                          if (isToggled == true) {
+                            _performfilter();
+                          }
+                          else {
+                            _performNonfilter();
+                          }
+                          
+                          // showDialog(
+                          //   context: context,
+                          //   builder: (BuildContext context) {
+                          //     return const AddProductDialog();
+                          //   },
+                          // );
+                        },
+                        child: Row(
+                          children: [
+                            // Expanded(
+                            //     // flex: 1, child: Icon(Icons)),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Expanded(
+                                flex: 5,
+                                child: Center(
+                                  child: Text(
+                                    "add_product.lowstock",
+                                  ).tr(),
+                                ))
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                 // const SizedBox(
                 //   height: 20,
                 // ),
-                // TextField(
-                //   controller: _searchController,
-                //   decoration: const InputDecoration(
-                //     hintText: 'ค้นหาสินค้า',
-                //   ),
-                //   onChanged: _performSearch,
-                // ),
+                TextField(
+                  controller: _searchController,
+                  decoration: const InputDecoration(
+                    hintText: "Search for product",
+                  ),
+                  onChanged: _performSearch,
+                ),
                 const SizedBox(
                   height: 20,
                 ),
-                FutureBuilder<
-                    List<dynamic>>(
+                FutureBuilder<List<dynamic>>(
                   future: _listProducts(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -195,10 +222,9 @@ class _NearyofstockScreenState extends State<NearyofstockScreen> {
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else {
-                      List<dynamic>
-                          products = snapshot.data!;
-                      List<dynamic>
-                          displayedProducts = products;
+                      List<dynamic> products = snapshot.data!;
+                      List<dynamic> displayedProducts =
+                          _searchResults.isNotEmpty ? _searchResults : products;
                       return GridView.builder(
                         padding: EdgeInsets.zero,
                         physics: const NeverScrollableScrollPhysics(),
@@ -207,19 +233,16 @@ class _NearyofstockScreenState extends State<NearyofstockScreen> {
                           crossAxisCount: 2,
                           crossAxisSpacing: 10,
                           mainAxisSpacing: 10,
-                          childAspectRatio: 153 / 185,
+                          childAspectRatio: 153 / 183,
                         ),
                         itemCount: displayedProducts.length,
                         shrinkWrap: true,
                         scrollDirection: Axis.vertical,
                         itemBuilder: (context, index) {
-                          // print(index);
-                          // if (displayedProducts[index].data()['amount'] <10 ) {
-                          return CardContainerdashboard(
-                            typesell: false,
+                          return CardContainerNos(
                             data: displayedProducts[index],
+                            storedData: storedData,
                           );
-                          // }
                         },
                       );
                     }

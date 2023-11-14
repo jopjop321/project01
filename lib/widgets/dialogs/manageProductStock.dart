@@ -45,10 +45,10 @@ class _ManageProductStockDialogState extends State<ManageProductStockDialog> {
 
   Future<void> _saveProduct() async {
     try {
-      final String apiUrl = 'http://192.168.1.77:8080/addstock';
+      final String apiUrl = 'http://192.168.1.77:8080/product/addstock';
       Map<String, dynamic> data = {
-        'code': widget.data['code'],
-        'amount': _currentStock + _addcurrentStock
+        'id': widget.data['id'],
+        'amount': _addcurrentStock
       };
 
       final response = await http.put(
@@ -75,7 +75,7 @@ class _ManageProductStockDialogState extends State<ManageProductStockDialog> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const ProductScreen(),
+              builder: (context) => const Home(page_receive: "nos"),
             ),
           );
         }

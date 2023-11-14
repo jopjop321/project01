@@ -2,6 +2,9 @@
     "dashboardscreen": {
         "total_income": "Total Income",
         "monthly_income": "Monthly Income",
+        "yearly_income": "Yearly Income",
+        "monthly_profit": "Monthly Profit",
+        "yearly_profit": "Yearly Profit",
         "total_profit": "Total profit",
         "total_selling": "Total Selling",
         "baht": "Baht",
@@ -12,7 +15,10 @@
             "name": "Name",
             "unit": "Unit",
             "amount": "Amount"
-        }
+        },
+        "date" : "Date",
+        "profit" : "Profit",
+        "open" : "Open"
     },
     "login":{
         "loginb":"LOGIN",
@@ -24,12 +30,15 @@
     },
     "signup":{
         "signup":"Sign up",
+        "register":"REGISTER",
         "name":"Name",
         "lastname":"LastName",
         "nickname":"Nickname",
         "username":"Username",
         "password":"Password",
-        "confirmpassword":"Confirm Password"
+        "confirmpassword":"Confirm Password",
+        "already_member":"Already a member? ",
+        "login":"Log in"
     },
     "darwer": {
         "menu": "Menu",
@@ -59,9 +68,10 @@
         "description": "Description",
         "image": "image",
         "cost_price": "Cost Price",
-        "normal_price": "Normal Price",
+        "price": "Price",
         "member_price": "Member Price",
-        "amount": "Amount"
+        "amount": "Amount",
+        "lowstock" : "Low Stock"
     },
     "edit_product" : {
         "edit_product": "Edit Product",
@@ -70,7 +80,7 @@
         "description": "Description",
         "image": "image",
         "cost_price": "Cost Price",
-        "normal_price": "Normal Price",
+        "normal_price": "Price",
         "member_price": "Member Price",
         "amount": "Amount",
         "seve" : "Save"
@@ -95,6 +105,31 @@
     },
     "add_stock" : {
         "add_stock" : "Add Stock"
+    },
+    "pos":{
+        "pos" :"POS",
+        "reset":"Reset"
+    },
+    "nos": {
+        "nos": "stock"
+    },
+    "setting":{
+        "setting" : "Setting",
+        "id" : "ID",
+        "name" : "Name",
+        "lastname" : "LastName",
+        "nickname" : "Nickname",
+        "position" : "Position",
+        "edit_profile" : "Edit Profile"
+    },
+    "info":{
+        "info":"Info",
+        "reset":"Reset",
+        "update" : "Update",
+        "status" : "Status",
+        "name" :"Name",
+        "id":"ID",
+        "position" :"Position"
     },
     "confirm": "Confirm",
     "cancel": "Cancel",
